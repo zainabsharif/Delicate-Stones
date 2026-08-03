@@ -1,10 +1,12 @@
 <div align="center">
 
-<img src="./assets/readme-banner.svg" alt="DelicateStones — Unique beaded treasures, strung by hand" width="100%">
+# ✦ DelicateStones ✦
+
+### *Handmade beaded jewelry, by Daniya*
+
+●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●
 
 <br>
-
-### Handmade beaded jewelry, by Daniya
 
 [![Live Site](https://img.shields.io/badge/live_site-visit-b6893c?style=for-the-badge&logo=googlechrome&logoColor=white)](https://zainabsharif.github.io/Delicate-Stones/)
 [![Instagram](https://img.shields.io/badge/instagram-@__delicatestones__-e2c88f?style=for-the-badge&logo=instagram&logoColor=white&labelColor=b6893c)](https://instagram.com/_delicatestones_)
@@ -14,38 +16,38 @@
 
 <br>
 
-<div align="center">
-&#9679;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9675;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9675;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9675;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9675;&nbsp;&nbsp;&#9679;
-</div>
+> *Every piece is beaded one bead at a time — designed to elevate your daily style, from a quiet morning to a night out.*
 
 <br>
 
-## ✨ About
+●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●
+
+<br>
+
+## ✦ About
 
 A single-page website for the **DelicateStones** jewelry brand — showcasing the collection, linking straight to Instagram and WhatsApp, and answering customer questions through a built-in chat assistant. No build tools, no backend, no dependencies — just one clean, self-contained site.
 
 <br>
 
-<div align="center">
+## ✦ Features
 
-| | | |
-|:---:|:---:|:---:|
-| 🪶 **Showcase the collection** | 💬 **One-tap WhatsApp ordering** | 📸 **Instagram integration** |
-| Bracelets, necklaces, earrings, and made-to-order pieces, presented cleanly | Every product and the floating button open a pre-filled WhatsApp chat | Direct links to the brand's Instagram profile |
-| 🤖 **Automated customer service** | 📱 **Fully responsive** | 🎨 **Custom design system** |
-| Instant answers on pricing, materials, shipping, and care — hands off to WhatsApp when needed | Looks and works cleanly on mobile, tablet, and desktop | Bead-motif signature styling throughout, not a generic template |
-
-</div>
-
-<br>
-
-<div align="center">
-&#9679;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9675;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9675;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9675;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9675;&nbsp;&nbsp;&#9679;
-</div>
+| | |
+|---|---|
+| **🪶 The Collection** | Bracelets, necklaces, earrings, and made-to-order pieces, presented cleanly |
+| **💬 One-Tap Ordering** | Every product and the floating button open a pre-filled WhatsApp chat |
+| **📸 Instagram Linked** | Direct links straight to the brand's Instagram profile |
+| **🤖 Automated Support** | Instant answers on pricing, materials, shipping, and care — hands off to WhatsApp when needed |
+| **📱 Fully Responsive** | Looks and works cleanly on mobile, tablet, and desktop |
+| **🎨 Custom Design** | A beaded-motif signature style throughout — not a generic template |
 
 <br>
 
-## 🛠️ Built with
+●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●
+
+<br>
+
+## ✦ Built With
 
 <div align="center">
 
@@ -56,24 +58,23 @@ A single-page website for the **DelicateStones** jewelry brand — showcasing th
 
 </div>
 
-No frameworks, no npm install, no build step. Fonts are [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond) (display) and [Jost](https://fonts.google.com/specimen/Jost) (body), loaded from Google Fonts. The whole site is one HTML file plus an `assets` folder — it can be hosted anywhere.
+No frameworks, no `npm install`, no build step. Fonts are [Cormorant Garamond](https://fonts.google.com/specimen/Cormorant+Garamond) (display) and [Jost](https://fonts.google.com/specimen/Jost) (body), loaded from Google Fonts. The whole site is one HTML file plus an `assets` folder — it can be hosted anywhere.
 
 <br>
 
-## 📁 Project structure
+## ✦ Project Structure
 
 ```
 Delicate-Stones/
-├── index.html               the entire site — HTML, CSS, and JS
+├── index.html          the entire site — HTML, CSS, and JS
 ├── assets/
-│   ├── logo.jpg               brand logo — nav, footer, hero medallion
-│   └── readme-banner.svg      banner used at the top of this README
+│   └── logo.jpg          brand logo — used in the nav, footer, hero medallion
 └── README.md
 ```
 
 <br>
 
-## 🚀 Running it locally
+## ✦ Running It Locally
 
 No installation required.
 
@@ -86,11 +87,15 @@ Then either open `index.html` directly in a browser, or — for the most accurat
 
 <br>
 
-## 🎨 Editing the site
+●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●
+
+<br>
+
+## ✦ Editing the Site
 
 Everything lives inside `index.html`, laid out top to bottom in the order it appears on the page:
 
-| Section | What it controls |
+| Section | What It Controls |
 |---|---|
 | `<style>` block | Colors, fonts, spacing — see the CSS variables at the top for the full palette |
 | Nav | Logo, menu links, WhatsApp button |
@@ -106,7 +111,7 @@ To swap in real product photography, replace the placeholder `<svg>` illustratio
 
 <br>
 
-## 🌐 Deployment
+## ✦ Deployment
 
 Hosted with **GitHub Pages**, served directly from the `main` branch. Every push to `main` updates the live site within a minute or two — no manual deploy step.
 
@@ -121,14 +126,14 @@ To deploy your own copy:
 
 <br>
 
-<div align="center">
-&#9679;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9675;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9675;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9675;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9679;&nbsp;&nbsp;&#9675;&nbsp;&nbsp;&#9679;
-</div>
+●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●&nbsp;&nbsp;●&nbsp;&nbsp;○&nbsp;&nbsp;●
 
 <br>
 
 <div align="center">
-<i>Made to order, one bead at a time.</i>
-<br><br>
-<b>— Daniya</b>
+
+*Made to order, one bead at a time.*
+
+**— Daniya**
+
 </div>
