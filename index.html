@@ -11,7 +11,9 @@
 <style>
   :root{
     --ink:#17140f;
+    --ink-dark:#0f0c07;
     --ivory:#f6efe2;
+    --ivory-soft:#f2e7d5;
     --card:#fffbf3;
     --gold:#b6893c;
     --gold-light:#e2c88f;
@@ -21,9 +23,15 @@
     --maxw: 1180px;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  html{scroll-behavior:smooth;}
+  html{scroll-behavior:smooth; font-size:112%;}
   body{
-    background:var(--ivory);
+    background:linear-gradient(180deg, var(--ivory) 0%, var(--ivory-soft) 100%);
+    background-image:
+      radial-gradient(circle at 20% 20%, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0) 28%),
+      radial-gradient(circle at 80% 75%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 24%),
+      linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+    background-repeat:no-repeat;
+    background-size: 420px 420px, 340px 340px, 100% 100%;
     color:var(--ink);
     font-family:'Jost', sans-serif;
     font-weight:300;
@@ -31,7 +39,7 @@
     -webkit-font-smoothing:antialiased;
     overflow-x:hidden;
   }
-  h1,h2,h3, .serif{ font-family:'Cormorant Garamond', serif; font-weight:500; letter-spacing:0.01em;}
+  h1,h2,h3, .serif{ font-family:'Cormorant Garamond', serif; font-weight:500; letter-spacing:0.01em; color:var(--ink-dark);}
   .eyebrow{
     font-size:0.72rem; letter-spacing:0.32em; text-transform:uppercase;
     color:var(--gold); font-weight:500; display:flex; align-items:center; gap:10px;
@@ -49,12 +57,12 @@
   }
   .beads span{
     width:9px; height:9px; border-radius:50%;
-    background: var(--gold);
+    background: var(--blush);
     box-shadow: 0 1px 2px rgba(0,0,0,0.15);
   }
-  .beads span:nth-child(3n){ background:var(--ink); width:7px; height:7px;}
-  .beads span:nth-child(5n){ background:var(--blush); width:11px; height:11px;}
-  .beads span:nth-child(7n){ background:var(--teal); width:6px; height:6px;}
+  .beads span:nth-child(3n), .beads span:nth-child(5n), .beads span:nth-child(7n){
+    background:var(--blush); width:9px; height:9px;
+  }
 
   /* ---------- Nav ---------- */
   header{
@@ -67,16 +75,22 @@
     display:flex; align-items:center; justify-content:space-between;
     padding-top:18px; padding-bottom:18px;
   }
-  .logo{ display:flex; align-items:center; gap:12px;}
-  .logo-mark{
-    width:38px; height:38px; border-radius:50%;
-    border:1px solid var(--gold);
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Cormorant Garamond', serif; font-size:1.05rem; color:var(--gold);
+  .logo{ display:flex; align-items:center; gap:16px;}
+  .logo-mark{ width:44px; height:44px; border-radius:50%; object-fit:cover; display:block; }
+  .logo-word{ display:flex; flex-direction:column; gap:4px; font-family:'Cormorant Garamond', serif; line-height:1.05; }
+  .logo-word .brand{ font-size:1.75rem; letter-spacing:0.06em; font-weight:500; }
+  .logo-word .brand em{ font-style:normal; color:var(--gold); }
+  .logo-word .tagline{ font-size:0.78rem; letter-spacing:0.24em; text-transform:uppercase; color:#4a453b; font-weight:500; }
+  .category-list{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:24px; margin-bottom:40px; }
+  .category-list button{
+    display:inline-flex; align-items:center; justify-content:center;
+    padding:12px 18px; border-radius:999px; border:1px solid rgba(23,20,15,0.12);
+    background:rgba(255,255,255,0.86); color:#4a453b; font-size:1rem; letter-spacing:0.02em;
+    transition:all 0.22s ease; cursor:pointer;
   }
-  .logo-word{ font-family:'Cormorant Garamond', serif; font-size:1.35rem; letter-spacing:0.06em;}
-  .logo-word em{ font-style:normal; color:var(--gold);}
-  .navlinks{ display:flex; gap:34px; font-size:0.85rem; letter-spacing:0.03em;}
+  .category-list button:hover,
+  .category-list button.active{ background:var(--gold); color:var(--ink); border-color:var(--gold); }
+  .navlinks{ display:flex; gap:34px; font-size:1rem; letter-spacing:0.03em;}
   .navlinks a{ position:relative; padding-bottom:4px;}
   .navlinks a::after{
     content:""; position:absolute; left:0; bottom:0; width:0%; height:1px; background:var(--gold);
@@ -85,7 +99,7 @@
   .navlinks a:hover::after{ width:100%;}
   .btn{
     display:inline-flex; align-items:center; gap:8px;
-    padding:11px 22px; border-radius:999px; font-size:0.8rem; letter-spacing:0.05em;
+    padding:12px 24px; border-radius:999px; font-size:0.95rem; letter-spacing:0.06em;
     border:1px solid var(--ink); transition:all 0.25s ease;
   }
   .btn-solid{ background:var(--ink); color:var(--ivory);}
@@ -97,23 +111,26 @@
 
   /* ---------- Hero ---------- */
   .hero{ padding:88px 0 40px; }
-  .hero .wrap{ display:grid; grid-template-columns:1.05fr 0.95fr; gap:60px; align-items:center;}
-  @media (max-width:900px){ .hero .wrap{ grid-template-columns:1fr; } }
-  .hero h1{ font-size:clamp(2.6rem, 5vw, 4.1rem); line-height:1.05; margin:18px 0 22px;}
+  .hero .wrap{ display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,0.95fr); gap:60px; align-items:center;}
+  @media (max-width:1100px){ .hero .wrap{ gap:48px; } }
+  @media (max-width:900px){ .hero .wrap{ grid-template-columns:1fr; gap:36px; } }
+  .hero h1{ font-size:clamp(3.2rem, 7vw, 5rem); line-height:1.02; margin:18px 0 22px;}
   .hero h1 em{ font-style:italic; color:var(--gold);}
   .hero p.lede{ font-size:1.05rem; max-width:44ch; color:#3a352c; margin-bottom:34px;}
   .hero-ctas{ display:flex; gap:16px; flex-wrap:wrap;}
 
   .medallion-wrap{ display:flex; align-items:center; justify-content:center; position:relative;}
-  .medallion{ animation: spin 60s linear infinite; }
+  .medallion{ animation: spin 60s linear infinite; width:100%; max-width:420px; height:auto; }
   @media (prefers-reduced-motion: reduce){ .medallion{ animation:none; } }
   @keyframes spin{ to{ transform:rotate(360deg);} }
 
   /* ---------- Section shell ---------- */
   section{ padding:70px 0;}
+  section:nth-of-type(odd):not(.about){ background: rgba(246,239,226,0.18); }
+  section:nth-of-type(even):not(.about){ background: rgba(242,229,214,0.16); }
   .section-head{ text-align:center; max-width:640px; margin:0 auto 46px;}
   .section-head h2{ font-size:clamp(2rem,3.4vw,2.7rem); margin-top:14px;}
-  .section-head p{ margin-top:14px; color:#4a453b; font-size:0.98rem;}
+  .section-head p{ margin-top:14px; color:#4a453b; font-size:1.08rem;}
 
   /* ---------- Collection ---------- */
   .grid-4{ display:grid; grid-template-columns:repeat(4,1fr); gap:26px;}
@@ -129,22 +146,23 @@
     background:linear-gradient(160deg, #efe4cf, #f8f2e6);
   }
   .card-body{ padding:22px 20px 26px;}
-  .card-body .eyebrow{ margin-bottom:8px; font-size:0.62rem;}
-  .card-body h3{ font-size:1.35rem; margin-bottom:6px;}
-  .card-body p{ font-size:0.87rem; color:#5a5347; margin-bottom:16px;}
-  .card-body .ask{ font-size:0.78rem; letter-spacing:0.04em; color:var(--gold); display:inline-flex; gap:6px; align-items:center;}
+  .card-body .eyebrow{ margin-bottom:8px; font-size:0.85rem;}
+  .card-body h3{ font-size:1.6rem; margin-bottom:8px;}
+  .card-body p{ font-size:1.05rem; color:#5a5347; margin-bottom:18px;}
+  .card-body .ask{ font-size:0.95rem; letter-spacing:0.04em; color:var(--gold); display:inline-flex; gap:6px; align-items:center;}
   .card-body .ask::after{ content:"→"; transition:transform 0.25s ease;}
   .card-body .ask:hover::after{ transform:translateX(4px);}
 
   /* ---------- About ---------- */
   .about{ background:var(--ink); color:var(--ivory);}
   .about .wrap{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:60px; align-items:center;}
+  @media (max-width:1100px){ .about .wrap{ gap:40px; } }
   @media (max-width:900px){ .about .wrap{ grid-template-columns:1fr;} }
-  .about h2{ font-size:clamp(2rem,3.6vw,2.9rem); margin-bottom:20px;}
-  .about p{ color:#d9d3c4; margin-bottom:16px; font-size:0.98rem; max-width:52ch;}
-  .about-sign{ font-family:'Cormorant Garamond', serif; font-style:italic; color:var(--gold-light); font-size:1.3rem; margin-top:22px;}
+  .about h2{ font-size:clamp(2.4rem,3.6vw,3.3rem); margin-bottom:20px;}
+  .about p{ color:#d9d3c4; margin-bottom:16px; font-size:1.12rem; max-width:52ch;}
+  .about-sign{ font-family:'Cormorant Garamond', serif; font-style:italic; color:var(--gold-light); font-size:1.6rem; margin-top:22px;}
   .values{ list-style:none; margin-top:26px; display:grid; gap:14px;}
-  .values li{ display:flex; gap:12px; font-size:0.9rem; color:#e8e2d3; align-items:flex-start;}
+  .values li{ display:flex; gap:12px; font-size:1.05rem; color:#e8e2d3; align-items:flex-start;}
   .values li .dot{ width:6px; height:6px; border-radius:50%; background:var(--gold); margin-top:8px; flex:none;}
 
   /* ---------- Instagram ---------- */
@@ -166,20 +184,20 @@
   @media (max-width:820px){ .steps{ grid-template-columns:1fr;} }
   .step{ position:relative; padding-left:0;}
   .step .num{
-    font-family:'Cormorant Garamond', serif; font-size:2.4rem; color:var(--gold-light);
+    font-family:'Cormorant Garamond', serif; font-size:2.8rem; color:var(--gold-light);
     -webkit-text-stroke:1px var(--gold); color:transparent;
     display:block; margin-bottom:10px;
   }
-  .step h3{ font-size:1.25rem; margin-bottom:8px;}
-  .step p{ font-size:0.9rem; color:#4a453b;}
+  .step h3{ font-size:1.45rem; margin-bottom:8px;}
+  .step p{ font-size:1.05rem; color:#4a453b;}
 
   /* ---------- Footer ---------- */
   footer{ border-top:1px solid var(--line); padding:54px 0 30px;}
   .foot-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:40px; margin-bottom:40px;}
   @media (max-width:760px){ .foot-grid{ grid-template-columns:1fr; gap:28px;} }
-  footer h4{ font-size:0.75rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:14px;}
-  footer .flinks{ display:grid; gap:10px; font-size:0.88rem; color:#4a453b;}
-  .foot-bottom{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:0.78rem; color:#77705f; border-top:1px solid var(--line); padding-top:22px;}
+  footer h4{ font-size:0.95rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:14px;}
+  footer .flinks{ display:grid; gap:10px; font-size:1rem; color:#4a453b;}
+  .foot-bottom{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; font-size:0.95rem; color:#77705f; border-top:1px solid var(--line); padding-top:22px;}
 
   /* ---------- Floating WhatsApp button ---------- */
   .wa-float{
@@ -214,24 +232,24 @@
     display:flex; align-items:center; gap:10px;
   }
   .chat-head .dot{ width:8px; height:8px; border-radius:50%; background:#5fd68e;}
-  .chat-head .title{ font-size:0.9rem;}
-  .chat-head .sub{ font-size:0.7rem; color:#c9c3b3;}
+  .chat-head .title{ font-size:1.05rem;}
+  .chat-head .sub{ font-size:0.85rem; color:#c9c3b3;}
   .chat-body{ flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px; background:var(--ivory);}
-  .msg{ max-width:82%; padding:10px 13px; border-radius:12px; font-size:0.85rem; line-height:1.5;}
+  .msg{ max-width:82%; padding:10px 13px; border-radius:12px; font-size:0.95rem; line-height:1.5;}
   .msg.bot{ background:var(--card); border:1px solid var(--line); align-self:flex-start; border-bottom-left-radius:2px;}
   .msg.user{ background:var(--ink); color:var(--ivory); align-self:flex-end; border-bottom-right-radius:2px;}
   .quick-replies{ display:flex; flex-wrap:wrap; gap:6px; padding:0 16px 12px; background:var(--ivory);}
   .qr-btn{
-    font-size:0.72rem; padding:6px 11px; border-radius:999px; border:1px solid var(--line);
+    font-size:0.85rem; padding:7px 12px; border-radius:999px; border:1px solid var(--line);
     background:var(--card); color:#4a453b;
   }
   .qr-btn:hover{ border-color:var(--gold); color:var(--gold);}
   .chat-input{ display:flex; border-top:1px solid var(--line); background:var(--card);}
   .chat-input input{
-    flex:1; border:none; background:transparent; padding:14px 16px; font-family:inherit; font-size:0.85rem; color:var(--ink); outline:none;
+    flex:1; border:none; background:transparent; padding:14px 16px; font-family:inherit; font-size:1rem; color:var(--ink); outline:none;
   }
   .chat-input button{
-    border:none; background:transparent; color:var(--gold); padding:0 16px; font-size:0.9rem;
+    border:none; background:transparent; color:var(--gold); padding:0 16px; font-size:1rem;
   }
 </style>
 </head>
@@ -240,8 +258,10 @@
 <header>
   <nav class="wrap">
     <div class="logo">
-      <div class="logo-mark">DS</div>
-      <div class="logo-word">Delicate<em>Stones</em></div>
+      <img class="logo-mark" src="./assets/logo.jpg" alt="DelicateStones logo">
+      <div class="logo-word">
+        <div class="brand">Delicate<em>Stones</em></div>
+      </div>
     </div>
     <div class="navlinks">
       <a href="#collection">Collection</a>
@@ -265,13 +285,14 @@
       </div>
     </div>
     <div class="medallion-wrap">
-      <svg class="medallion" width="360" height="360" viewBox="0 0 360 360" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="180" cy="180" r="176" stroke="#b6893c" stroke-opacity="0.35" stroke-width="1"/>
-        <g id="ring1"></g>
-        <g id="ring2"></g>
-        <circle cx="180" cy="180" r="70" fill="#fffbf3" stroke="#b6893c" stroke-width="1"/>
-        <text x="180" y="176" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="20" fill="#17140f">Delicate</text>
-        <text x="180" y="198" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="20" fill="#b6893c">Stones</text>
+      <svg class="medallion" width="420" height="420" viewBox="0 0 420 420" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        <defs>
+          <clipPath id="logoClip">
+            <circle cx="210" cy="210" r="175" />
+          </clipPath>
+        </defs>
+        <circle cx="210" cy="210" r="205" stroke="#b6893c" stroke-opacity="0.35" stroke-width="1"/>
+        <image x="30" y="30" width="360" height="360" xlink:href="./assets/logo.jpg" clip-path="url(#logoClip)" preserveAspectRatio="xMidYMid slice" />
       </svg>
     </div>
   </div>
@@ -286,9 +307,18 @@
       <h2>A few favorites</h2>
       <p>A preview of what's stocked right now — full catalog and made-to-order pieces are on Instagram and available to order over WhatsApp.</p>
     </div>
+    <div class="category-list" aria-label="Product categories">
+      <button type="button" data-category="all" class="active">All</button>
+      <button type="button" data-category="necklace">Necklaces</button>
+      <button type="button" data-category="bracelet">Bracelets</button>
+      <button type="button" data-category="pendant">Pendants</button>
+      <button type="button" data-category="earring">Earrings</button>
+      <button type="button" data-category="friendship">Friendship Bands</button>
+      <button type="button" data-category="keychain">Keychains</button>
+    </div>
     <div class="grid-4">
 
-      <div class="card">
+      <div class="card" data-category="bracelet">
         <div class="card-art">
           <svg width="140" height="140" viewBox="0 0 140 140"><g stroke="#b6893c" stroke-width="1.4" fill="none"><path d="M20 70 A50 50 0 0 1 120 70" /></g>
             <circle cx="20" cy="70" r="6" fill="#17140f"/><circle cx="35" cy="47" r="6" fill="#e2c88f"/><circle cx="58" cy="32" r="6" fill="#b6893c"/><circle cx="83" cy="32" r="6" fill="#e2c88f"/><circle cx="106" cy="47" r="6" fill="#17140f"/><circle cx="120" cy="70" r="6" fill="#b6893c"/>
@@ -302,7 +332,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-category="necklace">
         <div class="card-art">
           <svg width="140" height="140" viewBox="0 0 140 140"><g stroke="#4c6a63" stroke-width="1.4" fill="none"><path d="M20 60 A50 55 0 0 0 120 60" /></g>
             <circle cx="20" cy="60" r="5" fill="#4c6a63"/><circle cx="42" cy="88" r="5" fill="#17140f"/><circle cx="70" cy="98" r="6" fill="#b6893c"/><circle cx="98" cy="88" r="5" fill="#17140f"/><circle cx="120" cy="60" r="5" fill="#4c6a63"/>
@@ -316,7 +346,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-category="earring">
         <div class="card-art">
           <svg width="140" height="140" viewBox="0 0 140 140">
             <circle cx="70" cy="30" r="5" fill="#17140f"/><circle cx="70" cy="46" r="4" fill="#b6893c"/>
@@ -333,7 +363,7 @@
         </div>
       </div>
 
-      <div class="card">
+      <div class="card" data-category="bracelet">
         <div class="card-art">
           <svg width="140" height="140" viewBox="0 0 140 140"><g stroke="#b6893c" stroke-width="1.4" fill="none"><path d="M25 75 A45 45 0 0 1 115 75" /></g>
             <circle cx="25" cy="75" r="5" fill="#d9b7a1"/><circle cx="45" cy="52" r="5" fill="#17140f"/><circle cx="70" cy="42" r="7" fill="#b6893c"/><circle cx="95" cy="52" r="5" fill="#17140f"/><circle cx="115" cy="75" r="5" fill="#d9b7a1"/>
@@ -347,6 +377,58 @@
         </div>
       </div>
 
+      <div class="card" data-category="pendant">
+        <div class="card-art">
+          <svg width="140" height="140" viewBox="0 0 140 140">
+            <path d="M70 22 L70 90" stroke="#b6893c" stroke-width="3" stroke-linecap="round"/>
+            <circle cx="70" cy="110" r="24" fill="#e2c88f" stroke="#b6893c" stroke-width="2"/>
+            <circle cx="70" cy="110" r="10" fill="#4c6a63"/>
+            <path d="M50 40c5 6 10 12 20 12s15-6 20-12" fill="none" stroke="#b6893c" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Pendant</div>
+          <h3>Emerald Halo</h3>
+          <p>Gold pendant with a green stone center and delicate Victorian-inspired details.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Emerald%20Halo%20pendant." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="keychain">
+        <div class="card-art">
+          <svg width="140" height="140" viewBox="0 0 140 140">
+            <rect x="58" y="28" width="24" height="18" rx="8" fill="#d9b7a1" stroke="#b6893c" stroke-width="2"/>
+            <circle cx="70" cy="62" r="10" fill="#4c6a63"/>
+            <path d="M70 72 L70 110" stroke="#b6893c" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="70" cy="118" r="8" fill="#17140f"/>
+          </svg>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Keychain</div>
+          <h3>Golden Drop</h3>
+          <p>A charming gold-plated keychain with a stone-bead accent for everyday sparkle.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Golden%20Drop%20keychain." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="friendship">
+        <div class="card-art">
+          <svg width="140" height="140" viewBox="0 0 140 140">
+            <path d="M40 40 C55 60 85 60 100 40" stroke="#b6893c" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M40 70 C55 90 85 90 100 70" stroke="#4c6a63" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <path d="M40 100 C55 120 85 120 100 100" stroke="#e2c88f" stroke-width="4" fill="none" stroke-linecap="round"/>
+            <circle cx="30" cy="100" r="5" fill="#17140f"/>
+            <circle cx="110" cy="40" r="5" fill="#d9b7a1"/>
+          </svg>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Friendship Bands</div>
+          <h3>Trio Love</h3>
+          <p>Three braided bands in soft gold, blush, and teal — perfect for matching with a friend.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Trio%20Love%20friendship%20bands." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -357,28 +439,25 @@
   <div class="wrap">
     <div>
       <svg width="220" height="220" viewBox="0 0 220 220" style="margin:0 auto; display:block;">
+        <defs>
+          <clipPath id="aboutLogoClip">
+            <circle cx="110" cy="110" r="100" />
+          </clipPath>
+        </defs>
         <circle cx="110" cy="110" r="100" fill="none" stroke="#e2c88f" stroke-width="1" stroke-opacity="0.4"/>
-        <circle cx="110" cy="30" r="7" fill="#e2c88f"/>
-        <circle cx="160" cy="55" r="6" fill="#4c6a63"/>
-        <circle cx="185" cy="105" r="7" fill="#e2c88f"/>
-        <circle cx="160" cy="160" r="6" fill="#d9b7a1"/>
-        <circle cx="110" cy="188" r="7" fill="#e2c88f"/>
-        <circle cx="58" cy="160" r="6" fill="#4c6a63"/>
-        <circle cx="34" cy="105" r="7" fill="#e2c88f"/>
-        <circle cx="58" cy="55" r="6" fill="#d9b7a1"/>
-        <text x="110" y="118" text-anchor="middle" font-family="Cormorant Garamond, serif" font-style="italic" font-size="22" fill="#f6efe2">D.</text>
+        <image x="10" y="10" width="200" height="200" xlink:href="./assets/logo.jpg" clip-path="url(#aboutLogoClip)" preserveAspectRatio="xMidYMid slice" />
       </svg>
     </div>
     <div>
       <div class="eyebrow" style="color:#e2c88f;">The Studio</div>
       <h2>By Daniya, bead by bead.</h2>
-      <p>DelicateStones started as a small collection of beaded pieces made for friends. Every bracelet and necklace is still strung by hand, in small batches, using semi-precious stones, freshwater pearls, and gold-filled accents.</p>
-      <p>No two batches are identical — and that's the point. If you want something changed — length, color, a specific bead — just ask on WhatsApp before you order.</p>
+      <p>DelicateStones started as a small collection of beaded pieces made for friends. Every bracelet and necklace is still strung by hand. Threaded friendship bands and keychains woven with skill.</p>
+    
       <ul class="values">
         <li><span class="dot"></span> Made to order, usually within a few days</li>
         <li><span class="dot"></span> Adjustable sizing on most bracelets</li>
-        <li><span class="dot"></span> Customization available — colors, charms, length</li>
-        <li><span class="dot"></span> Packaged in a branded DelicateStones box</li>
+       
+        
       </ul>
       <div class="about-sign">— Daniya</div>
     </div>
@@ -439,8 +518,11 @@
     <div class="foot-grid">
       <div>
         <div class="logo" style="margin-bottom:14px;">
-          <div class="logo-mark">DS</div>
-          <div class="logo-word">Delicate<em>Stones</em></div>
+          <img class="logo-mark" src="./assets/logo.jpg" alt="DelicateStones logo">
+          <div class="logo-word">
+            <div class="brand">Delicate<em>Stones</em></div>
+            <div class="tagline">handmade jewelry</div>
+          </div>
         </div>
         <p style="font-size:0.88rem; color:#4a453b; max-width:32ch;">Unique beaded treasures designed to elevate your daily style. By Daniya.</p>
       </div>
@@ -462,7 +544,7 @@
     </div>
     <div class="foot-bottom">
       <span>© 2026 DelicateStones. All pieces handmade to order.</span>
-      <span>Site by Daniya, with a little help from Claude</span>
+      <span>Site by Zainab Sharif</span>
     </div>
   </div>
 </footer>
@@ -520,8 +602,6 @@
       g.appendChild(c);
     }
   }
-  beadRing('ring1', 130, 18, ['#b6893c','#17140f','#e2c88f']);
-  beadRing('ring2', 100, 14, ['#d9b7a1','#4c6a63','#b6893c']);
 
   // ---- Automated customer service bot (rule-based, works fully offline) ----
   const chatToggle = document.getElementById('chatToggle');
@@ -586,6 +666,30 @@
     }
     setTimeout(()=> botReply(text), 450);
   }
+
+  function setupCategoryFiltering(){
+    const buttons = document.querySelectorAll('.category-list button');
+    const cards = document.querySelectorAll('.grid-4 .card');
+
+    function filterCategory(category){
+      buttons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.category === category);
+      });
+      cards.forEach(card => {
+        const cardCategory = card.dataset.category || 'all';
+        card.style.display = category === 'all' || cardCategory === category ? 'grid' : 'none';
+      });
+    }
+
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        filterCategory(button.dataset.category);
+      });
+    });
+    filterCategory('all');
+  }
+
+  setupCategoryFiltering();
 
   chatToggle.onclick = ()=>{
     chatPanel.classList.toggle('open');
