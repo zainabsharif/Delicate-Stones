@@ -16,6 +16,7 @@
 
 <br>
 
+
 > *Every piece is beaded one bead at a time — designed to elevate your daily style, from a quiet morning to a night out.*
 
 <br>
@@ -24,9 +25,15 @@
 
 <br>
 
+https://github.com/user-attachments/assets/1b5c4b69-0a15-4a07-8890-ea61ef5065b8
+
+
+<br>
+
+
 ## ✦ About
 
-A single-page website for the **DelicateStones** jewelry brand — showcasing the collection, linking straight to Instagram and WhatsApp, and answering customer questions through a built-in chat assistant. No build tools, no backend, no dependencies — just one clean, self-contained site.
+A  website for the **DelicateStones** jewelry brand — showcasing the collection, linking straight to Instagram and WhatsApp, and answering customer questions through a built-in chat assistant. No build tools, no backend, no dependencies — just one clean, self-contained site.
 
 <br>
 
