@@ -25,13 +25,13 @@
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth; font-size:112%;}
   body{
-    background:linear-gradient(180deg, var(--ivory) 0%, var(--ivory-soft) 100%);
-    background-image:
-      radial-gradient(circle at 20% 20%, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0) 28%),
-      radial-gradient(circle at 80% 75%, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0) 24%),
-      linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
-    background-repeat:no-repeat;
-    background-size: 420px 420px, 340px 340px, 100% 100%;
+    background:
+      linear-gradient(rgba(255,255,255,0.65), rgba(255,255,255,0.65)),
+      url("./assets/background/2.png"),
+      var(--ivory);
+    background-repeat: no-repeat, repeat, repeat;
+    background-size: cover, 420px, auto;
+    background-attachment: scroll, fixed, scroll;
     color:var(--ink);
     font-family:'Jost', sans-serif;
     font-weight:300;
@@ -67,7 +67,7 @@
   /* ---------- Nav ---------- */
   header{
     position:sticky; top:0; z-index:40;
-    background:rgba(246,239,226,0.9);
+    background:rgba(230,220,200,0.70);
     backdrop-filter: blur(10px);
     border-bottom:1px solid var(--line);
   }
@@ -137,13 +137,13 @@
   @media (max-width:980px){ .grid-4{ grid-template-columns:repeat(2,1fr);} }
   @media (max-width:560px){ .grid-4{ grid-template-columns:1fr;} }
   .card{
-    background:var(--card); border:1px solid var(--line); border-radius:4px;
+    background:rgba(255,251,243,0.75); border:1px solid var(--line); border-radius:4px;
     overflow:hidden; transition:transform 0.35s ease, box-shadow 0.35s ease;
   }
   .card:hover{ transform:translateY(-6px); box-shadow:0 20px 40px -20px rgba(23,20,15,0.25);}
   .card-art{
     aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
-    background:linear-gradient(160deg, #efe4cf, #f8f2e6);
+    background:linear-gradient(160deg, rgba(239,228,207,0.5), rgba(248,242,230,0.5));
   }
   .card-body{ padding:22px 20px 26px;}
   .card-body .eyebrow{ margin-bottom:8px; font-size:0.85rem;}
@@ -170,7 +170,7 @@
   @media (max-width:700px){ .ig-grid{ grid-template-columns:repeat(2,1fr);} }
   .ig-tile{
     aspect-ratio:1/1; position:relative; overflow:hidden;
-    background:linear-gradient(150deg, #efe4cf, #f8f2e6);
+    background:linear-gradient(150deg, rgba(239,228,207,0.5), rgba(248,242,230,0.5));
   }
   .ig-tile::after{
     content:""; position:absolute; inset:0; background:rgba(23,20,15,0);
@@ -450,7 +450,7 @@
     </div>
     <div>
       <div class="eyebrow" style="color:#e2c88f;">The Studio</div>
-      <h2>By Daniya, bead by bead.</h2>
+      <h2 style="color:#e2c88f;">By Daniya, bead by bead.</h2>
       <p>DelicateStones started as a small collection of beaded pieces made for friends. Every bracelet and necklace is still strung by hand. Threaded friendship bands and keychains woven with skill.</p>
     
       <ul class="values">
