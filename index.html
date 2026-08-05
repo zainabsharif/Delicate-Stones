@@ -26,7 +26,7 @@
   html{scroll-behavior:smooth; font-size:112%;}
   body{
     background:
-      linear-gradient(rgba(255,255,255,0.65), rgba(255,255,255,0.65)),
+      linear-gradient(rgba(255,255,255,0.35), rgba(255,255,255,0.35)),
       url("./assets/background/2.png"),
       var(--ivory);
     background-repeat: no-repeat, repeat, repeat;
@@ -138,17 +138,18 @@
   @media (max-width:560px){ .grid-4{ grid-template-columns:1fr;} }
   .card{
     background:rgba(255,251,243,0.75); border:1px solid var(--line); border-radius:4px;
-    overflow:hidden; transition:transform 0.35s ease, box-shadow 0.35s ease;
+    transition:transform 0.35s ease, box-shadow 0.35s ease;
   }
   .card:hover{ transform:translateY(-6px); box-shadow:0 20px 40px -20px rgba(23,20,15,0.25);}
   .card-art{
     aspect-ratio:1/1; display:flex; align-items:center; justify-content:center;
     background:linear-gradient(160deg, rgba(239,228,207,0.5), rgba(248,242,230,0.5));
+    overflow:hidden;
   }
   .card-body{ padding:22px 20px 26px;}
   .card-body .eyebrow{ margin-bottom:8px; font-size:0.85rem;}
-  .card-body h3{ font-size:1.6rem; margin-bottom:8px;}
-  .card-body p{ font-size:1.05rem; color:#5a5347; margin-bottom:18px;}
+  .card-body h3{ font-size:1.6rem; margin-bottom:8px; overflow-wrap:break-word; word-break:break-word; hyphens:auto; white-space:normal; overflow:visible;}
+  .card-body p{ font-size:1.05rem; color:#5a5347; margin-bottom:18px; overflow-wrap:break-word; word-break:break-word; white-space:normal; overflow:visible;}
   .card-body .ask{ font-size:0.95rem; letter-spacing:0.04em; color:var(--gold); display:inline-flex; gap:6px; align-items:center;}
   .card-body .ask::after{ content:"→"; transition:transform 0.25s ease;}
   .card-body .ask:hover::after{ transform:translateX(4px);}
@@ -192,7 +193,7 @@
   .step p{ font-size:1.05rem; color:#4a453b;}
 
   /* ---------- Footer ---------- */
-  footer{ border-top:1px solid var(--line); padding:54px 0 30px;}
+  footer{ background: rgba(230,220,200,0.70); border-top:1px solid var(--line); padding:54px 0 30px;}
   .foot-grid{ display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:40px; margin-bottom:40px;}
   @media (max-width:760px){ .foot-grid{ grid-template-columns:1fr; gap:28px;} }
   footer h4{ font-size:0.95rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:14px;}
@@ -311,7 +312,6 @@
       <button type="button" data-category="all" class="active">All</button>
       <button type="button" data-category="necklace">Necklaces</button>
       <button type="button" data-category="bracelet">Bracelets</button>
-      <button type="button" data-category="pendant">Pendants</button>
       <button type="button" data-category="earring">Earrings</button>
       <button type="button" data-category="friendship">Friendship Bands</button>
       <button type="button" data-category="keychain">Keychains</button>
@@ -320,9 +320,7 @@
 
       <div class="card" data-category="bracelet">
         <div class="card-art">
-          <svg width="140" height="140" viewBox="0 0 140 140"><g stroke="#b6893c" stroke-width="1.4" fill="none"><path d="M20 70 A50 50 0 0 1 120 70" /></g>
-            <circle cx="20" cy="70" r="6" fill="#17140f"/><circle cx="35" cy="47" r="6" fill="#e2c88f"/><circle cx="58" cy="32" r="6" fill="#b6893c"/><circle cx="83" cy="32" r="6" fill="#e2c88f"/><circle cx="106" cy="47" r="6" fill="#17140f"/><circle cx="120" cy="70" r="6" fill="#b6893c"/>
-          </svg>
+          <img src="./assets/Items/Bracelets/Pearl Lattice Band .jpeg" alt="Stacked Pearl" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
         </div>
         <div class="card-body">
           <div class="eyebrow">Bracelet</div>
@@ -334,9 +332,7 @@
 
       <div class="card" data-category="necklace">
         <div class="card-art">
-          <svg width="140" height="140" viewBox="0 0 140 140"><g stroke="#4c6a63" stroke-width="1.4" fill="none"><path d="M20 60 A50 55 0 0 0 120 60" /></g>
-            <circle cx="20" cy="60" r="5" fill="#4c6a63"/><circle cx="42" cy="88" r="5" fill="#17140f"/><circle cx="70" cy="98" r="6" fill="#b6893c"/><circle cx="98" cy="88" r="5" fill="#17140f"/><circle cx="120" cy="60" r="5" fill="#4c6a63"/>
-          </svg>
+          <img src="./assets/Items/Necklaces/Turquoise Tube & Gold Drop Lariat Set.jpeg" alt="Layered Turquoise" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
         </div>
         <div class="card-body">
           <div class="eyebrow">Necklace</div>
@@ -346,14 +342,9 @@
         </div>
       </div>
 
-      <div class="card" data-category="earring">
+      <!-- <div class="card" data-category="earring">
         <div class="card-art">
-          <svg width="140" height="140" viewBox="0 0 140 140">
-            <circle cx="70" cy="30" r="5" fill="#17140f"/><circle cx="70" cy="46" r="4" fill="#b6893c"/>
-            <circle cx="55" cy="90" r="4" fill="#17140f"/><circle cx="55" cy="102" r="3" fill="#e2c88f"/>
-            <circle cx="85" cy="90" r="4" fill="#17140f"/><circle cx="85" cy="102" r="3" fill="#e2c88f"/>
-            <path d="M55 90 Q70 60 85 90" stroke="#b6893c" stroke-width="1.2" fill="none"/>
-          </svg>
+          <img src="./assets/Items/Earrings/Delicate Pearl Drop Set.jpeg" alt="Onyx Drop" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
         </div>
         <div class="card-body">
           <div class="eyebrow">Earrings</div>
@@ -361,71 +352,253 @@
           <p>Black onyx beads finished with a small gold droplet. Lightweight daily wear.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Onyx%20Drop%20earrings." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
-      </div>
+      </div> -->
 
       <div class="card" data-category="bracelet">
         <div class="card-art">
-          <svg width="140" height="140" viewBox="0 0 140 140"><g stroke="#b6893c" stroke-width="1.4" fill="none"><path d="M25 75 A45 45 0 0 1 115 75" /></g>
-            <circle cx="25" cy="75" r="5" fill="#d9b7a1"/><circle cx="45" cy="52" r="5" fill="#17140f"/><circle cx="70" cy="42" r="7" fill="#b6893c"/><circle cx="95" cy="52" r="5" fill="#17140f"/><circle cx="115" cy="75" r="5" fill="#d9b7a1"/>
-          </svg>
+          <img src="./assets/Items/Bracelets/The Garnet labubu Charm.jpeg" alt="Evil Eye Charm" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
         </div>
         <div class="card-body">
           <div class="eyebrow">Bracelet</div>
-          <h3>Evil Eye Charm</h3>
-          <p>Gold beaded chain with a hand-set evil eye charm for protection and style.</p>
+          <h3>Labubu Charm</h3>
+          <p>Brown beaded Bracelet with a hand-set Labubu charm for style.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Evil%20Eye%20Charm%20bracelet." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
 
-      <div class="card" data-category="pendant">
-        <div class="card-art">
-          <svg width="140" height="140" viewBox="0 0 140 140">
-            <path d="M70 22 L70 90" stroke="#b6893c" stroke-width="3" stroke-linecap="round"/>
-            <circle cx="70" cy="110" r="24" fill="#e2c88f" stroke="#b6893c" stroke-width="2"/>
-            <circle cx="70" cy="110" r="10" fill="#4c6a63"/>
-            <path d="M50 40c5 6 10 12 20 12s15-6 20-12" fill="none" stroke="#b6893c" stroke-width="2" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="card-body">
-          <div class="eyebrow">Pendant</div>
-          <h3>Emerald Halo</h3>
-          <p>Gold pendant with a green stone center and delicate Victorian-inspired details.</p>
-          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Emerald%20Halo%20pendant." target="_blank" rel="noopener">Ask about this piece</a>
-        </div>
-      </div>
+      
 
       <div class="card" data-category="keychain">
         <div class="card-art">
-          <svg width="140" height="140" viewBox="0 0 140 140">
-            <rect x="58" y="28" width="24" height="18" rx="8" fill="#d9b7a1" stroke="#b6893c" stroke-width="2"/>
-            <circle cx="70" cy="62" r="10" fill="#4c6a63"/>
-            <path d="M70 72 L70 110" stroke="#b6893c" stroke-width="4" stroke-linecap="round"/>
-            <circle cx="70" cy="118" r="8" fill="#17140f"/>
-          </svg>
+          <img src="./assets/Items/Keychains/The Noir Ribbon Keyring.jpeg" alt="The Noir Ribbon Keyring" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
         </div>
         <div class="card-body">
           <div class="eyebrow">Keychain</div>
-          <h3>Golden Drop</h3>
-          <p>A charming gold-plated keychain with a stone-bead accent for everyday sparkle.</p>
-          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Golden%20Drop%20keychain." target="_blank" rel="noopener">Ask about this piece</a>
+          <h3>The Noir Ribbon Keyring</h3>
+          <p>The Noir Ribbon Keyring: A hand-crocheted black rope bow charm attached to a gunmetal key ring and swivel clasp, combining a coquette silhouette with a dark aesthetic.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Noir%20Ribbon%20Keyring." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
 
       <div class="card" data-category="friendship">
         <div class="card-art">
-          <svg width="140" height="140" viewBox="0 0 140 140">
-            <path d="M40 40 C55 60 85 60 100 40" stroke="#b6893c" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <path d="M40 70 C55 90 85 90 100 70" stroke="#4c6a63" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <path d="M40 100 C55 120 85 120 100 100" stroke="#e2c88f" stroke-width="4" fill="none" stroke-linecap="round"/>
-            <circle cx="30" cy="100" r="5" fill="#17140f"/>
-            <circle cx="110" cy="40" r="5" fill="#d9b7a1"/>
-          </svg>
+          <img src="./assets/Items/Friendship Bands/Earth & Weave.jpeg" alt="Trio Love" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
         </div>
         <div class="card-body">
           <div class="eyebrow">Friendship Bands</div>
           <h3>Trio Love</h3>
           <p>Three braided bands in soft gold, blush, and teal — perfect for matching with a friend.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Trio%20Love%20friendship%20bands." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <!-- Additional cards generated from assets/Items -->
+
+      <!-- Necklaces -->
+      <div class="card" data-category="necklace">
+        <div class="card-art">
+          <img src="./assets/Items/Necklaces/Delicate Pearl Drop Set.jpeg" alt="Delicate Pearl Drop Set" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Necklace</div>
+          <h3>Delicate Pearl Drop Set</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Delicate%20Pearl%20Drop%20Set." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="necklace">
+        <div class="card-art">
+          <img src="./assets/Items/Necklaces/The Obsidian Y-Lariat Necklace.jpeg" alt="The Obsidian Y-Lariat Necklace" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Necklace</div>
+          <h3>The Obsidian Y-Lariat Necklace</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Obsidian%20Y-Lariat%20Necklace." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <!-- Bracelets -->
+      <div class="card" data-category="bracelet">
+        <div class="card-art">
+          <img src="./assets/Items/Bracelets/Crystal Initial Bead Bracelets.jpeg" alt="Crystal Initial Bead Bracelets" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Bracelet</div>
+          <h3>Crystal Initial Bead Bracelets</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Crystal%20Initial%20Bead%20Bracelets." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="bracelet">
+        <div class="card-art">
+          <img src="./assets/Items/Bracelets/The Champagne Sparkle Band.jpeg" alt="The Champagne Sparkle Band" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Bracelet</div>
+          <h3>The Champagne Sparkle Band</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Champagne%20Sparkle%20Band." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="bracelet">
+        <div class="card-art">
+          <img src="./assets/Items/Bracelets/The Coastal Frost Set.jpeg" alt="The Coastal Frost Set" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Bracelet</div>
+          <h3>The Coastal Frost Set</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Coastal%20Frost%20Set." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="bracelet">
+        <div class="card-art">
+          <img src="./assets/Items/Bracelets/The Coquette Bow Pearl.jpeg" alt="The Coquette Bow Pearl" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Bracelet</div>
+          <h3>The Coquette Bow Pearl</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Coquette%20Bow%20Pearl." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="bracelet">
+        <div class="card-art">
+          <img src="./assets/Items/Bracelets/The Crystal Tide Bracelet.jpeg" alt="The Crystal Tide Bracelet" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Bracelet</div>
+          <h3>The Crystal Tide Bracelet</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Crystal%20Tide%20Bracelet." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="bracelet">
+        <div class="card-art">
+          <img src="./assets/Items/Bracelets/The Ivory Blossom Lattice.jpeg" alt="The Ivory Blossom Lattice" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Bracelet</div>
+          <h3>The Ivory Blossom Lattice</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Ivory%20Blossom%20Lattice." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="bracelet">
+        <div class="card-art">
+          <img src="./assets/Items/Bracelets/The Lilac Teardrop Strand.jpeg" alt="The Lilac Teardrop Strand" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Bracelet</div>
+          <h3>The Lilac Teardrop Strand</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Lilac%20Teardrop%20Strand." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="bracelet">
+        <div class="card-art">
+          <img src="./assets/Items/Bracelets/The Petite Kitty Crystal Beaded Bracelet.jpeg" alt="The Petite Kitty Crystal Beaded Bracelet" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Bracelet</div>
+          <h3>The Petite Kitty Crystal Beaded Bracelet</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Petite%20Kitty%20Crystal%20Beaded%20Bracelet." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="bracelet">
+        <div class="card-art">
+          <img src="./assets/Items/Bracelets/The Yin & Yang Eternal Bond.jpeg" alt="The Yin & Yang Eternal Bond" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Bracelet</div>
+          <h3>The Yin & Yang Eternal Bond</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Yin%20%26%20Yang%20Eternal%20Bond." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <!-- Earrings -->
+      <div class="card" data-category="earring">
+        <div class="card-art">
+          <img src="./assets/Items/Earrings/Delicate Pearl Drop Set.jpeg" alt="Delicate Pearl Drop Set (Earrings)" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Earrings</div>
+          <h3>Delicate Pearl Drop Set</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Delicate%20Pearl%20Drop%20Set%20(Earrings)." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="earring">
+        <div class="card-art">
+          <img src="./assets/Items/Earrings/Turquoise Tube & Gold Drop Lariat Set.jpeg" alt="Turquoise Tube & Gold Drop Lariat Set (Earrings)" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Earrings</div>
+          <h3>Turquoise Tube & Gold Drop Lariat Set</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Turquoise%20Tube%20%26%20Gold%20Drop%20Lariat%20Set%20(Earrings)." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <!-- Friendship Bands (additional) -->
+      <div class="card" data-category="friendship">
+        <div class="card-art">
+          <img src="./assets/Items/Friendship Bands/The Aegean Duo.jpeg" alt="The Aegean Duo" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Friendship Bands</div>
+          <h3>The Aegean Duo</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Aegean%20Duo." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="friendship">
+        <div class="card-art">
+          <img src="./assets/Items/Friendship Bands/The Caspian Plaid.jpeg" alt="The Caspian Plaid" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Friendship Bands</div>
+          <h3>The Caspian Plaid</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Caspian%20Plaid." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="friendship">
+        <div class="card-art">
+          <img src="./assets/Items/Friendship Bands/The Rosewood Chevron.jpeg" alt="The Rosewood Chevron" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Friendship Bands</div>
+          <h3>The Rosewood Chevron</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Rosewood%20Chevron." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="friendship">
+        <div class="card-art">
+          <img src="./assets/Items/Friendship Bands/The Scarlet Pearl Cord.jpeg" alt="The Scarlet Pearl Cord" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Friendship Bands</div>
+          <h3>The Scarlet Pearl Cord</h3>
+          <p>Description coming soon.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Scarlet%20Pearl%20Cord." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
 
