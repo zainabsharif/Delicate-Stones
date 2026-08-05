@@ -81,7 +81,7 @@
   .logo-word .brand{ font-size:1.75rem; letter-spacing:0.06em; font-weight:500; }
   .logo-word .brand em{ font-style:normal; color:var(--gold); }
   .logo-word .tagline{ font-size:0.78rem; letter-spacing:0.24em; text-transform:uppercase; color:#4a453b; font-weight:500; }
-  .category-list{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:24px; margin-bottom:40px; }
+  .category-list{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-top:24px; margin-bottom:28px; }
   .category-list button{
     display:inline-flex; align-items:center; justify-content:center;
     padding:12px 18px; border-radius:999px; border:1px solid rgba(23,20,15,0.12);
@@ -133,11 +133,11 @@
   .section-head p{ margin-top:14px; color:#4a453b; font-size:1.08rem;}
 
   /* ---------- Collection ---------- */
-  .grid-4{ display:grid; grid-template-columns:repeat(4,1fr); gap:26px;}
+  .grid-4{ display:grid; grid-template-columns:repeat(4,1fr); gap:20px; align-items:start;}
   @media (max-width:980px){ .grid-4{ grid-template-columns:repeat(2,1fr);} }
   @media (max-width:560px){ .grid-4{ grid-template-columns:1fr;} }
   .card{
-    background:rgba(255,251,243,0.75); border:1px solid var(--line); border-radius:4px;
+    display:flex; flex-direction:column; background:rgba(255,251,243,0.75); border:1px solid var(--line); border-radius:4px;
     transition:transform 0.35s ease, box-shadow 0.35s ease;
   }
   .card:hover{ transform:translateY(-6px); box-shadow:0 20px 40px -20px rgba(23,20,15,0.25);}
@@ -146,10 +146,10 @@
     background:linear-gradient(160deg, rgba(239,228,207,0.5), rgba(248,242,230,0.5));
     overflow:hidden;
   }
-  .card-body{ padding:22px 20px 26px;}
-  .card-body .eyebrow{ margin-bottom:8px; font-size:0.85rem;}
-  .card-body h3{ font-size:1.6rem; margin-bottom:8px; overflow-wrap:break-word; word-break:break-word; hyphens:auto; white-space:normal; overflow:visible;}
-  .card-body p{ font-size:1.05rem; color:#5a5347; margin-bottom:18px; overflow-wrap:break-word; word-break:break-word; white-space:normal; overflow:visible;}
+  .card-body{ padding:18px 18px 22px; display:flex; flex-direction:column; gap:14px;}
+  .card-body .eyebrow{ margin-bottom:0; font-size:0.85rem;}
+  .card-body h3{ font-size:1.6rem; margin:0; line-height:1.2; overflow-wrap:break-word; word-break:break-word; hyphens:auto; white-space:normal;}
+  .card-body p{ font-size:1.05rem; color:#5a5347; margin:0; line-height:1.65; overflow-wrap:break-word; word-break:break-word; white-space:normal;}
   .card-body .ask{ font-size:0.95rem; letter-spacing:0.04em; color:var(--gold); display:inline-flex; gap:6px; align-items:center;}
   .card-body .ask::after{ content:"→"; transition:transform 0.25s ease;}
   .card-body .ask:hover::after{ transform:translateX(4px);}
@@ -311,6 +311,8 @@
     <div class="category-list" aria-label="Product categories">
       <button type="button" data-category="all" class="active">All</button>
       <button type="button" data-category="necklace">Necklaces</button>
+      <button type="button" data-category="sets">Sets</button>
+      <button type="button" data-category="ring">Rings</button>
       <button type="button" data-category="bracelet">Bracelets</button>
       <button type="button" data-category="earring">Earrings</button>
       <button type="button" data-category="friendship">Friendship Bands</button>
@@ -325,20 +327,36 @@
         <div class="card-body">
           <div class="eyebrow">Bracelet</div>
           <h3>Stacked Pearl</h3>
-          <p>Freshwater pearls with a hand-tied gold accent bead. Adjustable fit.</p>
+          <p>Freshwater pearl beads with a hand-tied golden accent bead. Adjustable fit.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Stacked%20Pearl%20bracelet." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
 
-      <div class="card" data-category="necklace">
+      <div class="card" data-category="sets">
         <div class="card-art">
           <img src="./assets/Items/Necklaces/Turquoise Tube & Gold Drop Lariat Set.jpeg" alt="Layered Turquoise" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
         </div>
         <div class="card-body">
-          <div class="eyebrow">Necklace</div>
+          <div class="eyebrow">Set</div>
           <h3>Layered Turquoise</h3>
-          <p>Double-layer beaded necklace with a warm gold clasp. Statement piece.</p>
+          <p>Double-layer beaded necklace with a warm golden clasp. Statement piece.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Layered%20Turquoise%20necklace." target="_blank" rel="noopener">Ask about this piece</a>
+        </div>
+      </div>
+
+      <div class="card" data-category="ring">
+        <div class="card-art" style="background:linear-gradient(135deg, rgba(205,177,152,0.2), rgba(247,237,223,0.6));">
+          <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:80px; height:80px;">
+            <circle cx="50" cy="50" r="32" stroke="#b6893c" stroke-width="6" fill="rgba(255,255,255,0.85)"/>
+            <path d="M34 38C34 31.3726 39.3726 26 46 26H54C60.6274 26 66 31.3726 66 38V44H34V38Z" fill="#b6893c"/>
+            <path d="M40 62C40 58.6863 42.6863 56 46 56H54C57.3137 56 60 58.6863 60 62V66H40V62Z" fill="#b6893c"/>
+          </svg>
+        </div>
+        <div class="card-body">
+          <div class="eyebrow">Ring</div>
+          <h3>Classic Halo Ring</h3>
+          <p>An elegant ring sample card to preview your ring collection before imagery is added.</p>
+          <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Classic%20Halo%20Ring." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
 
@@ -375,7 +393,7 @@
         <div class="card-body">
           <div class="eyebrow">Keychain</div>
           <h3>The Noir Ribbon Keyring</h3>
-          <p>The Noir Ribbon Keyring: A hand-crocheted black rope bow charm attached to a gunmetal key ring and swivel clasp, combining a coquette silhouette with a dark aesthetic.</p>
+          <p>A hand-crocheted black rope bow charm attached to a gunmetal key ring and swivel clasp, combining a coquette silhouette with a dark aesthetic.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Noir%20Ribbon%20Keyring." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
@@ -395,14 +413,16 @@
       <!-- Additional cards generated from assets/Items -->
 
       <!-- Necklaces -->
-      <div class="card" data-category="necklace">
+      <div class="card" data-category="sets">
         <div class="card-art">
           <img src="./assets/Items/Necklaces/Delicate Pearl Drop Set.jpeg" alt="Delicate Pearl Drop Set" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
         </div>
         <div class="card-body">
-          <div class="eyebrow">Necklace</div>
+          <div class="eyebrow">Set</div>
           <h3>Delicate Pearl Drop Set</h3>
-          <p>Description coming soon.</p>
+          <p>The Ivory Teardrop Choker: Delicate white seed pearl necklace linked with golden rings and a centered pearlescent teardrop charm.
+
+<br>The Ivory Teardrop Earrings: Matching golden hook earrings with single, luminous pearlescent teardrops.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Delicate%20Pearl%20Drop%20Set." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
@@ -414,7 +434,7 @@
         <div class="card-body">
           <div class="eyebrow">Necklace</div>
           <h3>The Obsidian Y-Lariat Necklace</h3>
-          <p>Description coming soon.</p>
+          <p>A sleek, dark minimalist jewelry set crafted with black cylindrical tube beads and golden accents.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Obsidian%20Y-Lariat%20Necklace." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
@@ -427,7 +447,7 @@
         <div class="card-body">
           <div class="eyebrow">Bracelet</div>
           <h3>Crystal Initial Bead Bracelets</h3>
-          <p>Description coming soon.</p>
+          <p>Faceted warm amber-golden crystal bead strands, each featuring a white round initial charm.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Crystal%20Initial%20Bead%20Bracelets." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
@@ -439,19 +459,19 @@
         <div class="card-body">
           <div class="eyebrow">Bracelet</div>
           <h3>The Champagne Sparkle Band</h3>
-          <p>Description coming soon.</p>
+          <p>A beautifully woven cluster band featuring faceted, champagne-hued crystal beads and gold accents that catch the light for a sophisticated sparkle.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Champagne%20Sparkle%20Band." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
 
-      <div class="card" data-category="bracelet">
+      <div class="card" data-category="sets">
         <div class="card-art">
           <img src="./assets/Items/Bracelets/The Coastal Frost Set.jpeg" alt="The Coastal Frost Set" style="width:100%; height:100%; object-fit:cover; border-radius:8px;"/>
         </div>
         <div class="card-body">
-          <div class="eyebrow">Bracelet</div>
+          <div class="eyebrow">Set</div>
           <h3>The Coastal Frost Set</h3>
-          <p>Description coming soon.</p>
+          <p>Matching beachside bracelets made of icy, translucent frosted cracked quartz beads, holding a shared magnetic heart token.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Coastal%20Frost%20Set." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
@@ -463,7 +483,7 @@
         <div class="card-body">
           <div class="eyebrow">Bracelet</div>
           <h3>The Coquette Bow Pearl</h3>
-          <p>Description coming soon.</p>
+          <p>Classic white pearl strand bracelet featuring a centered vintage-inspired polished golden bow charm.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Coquette%20Bow%20Pearl." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
@@ -475,7 +495,7 @@
         <div class="card-body">
           <div class="eyebrow">Bracelet</div>
           <h3>The Crystal Tide Bracelet</h3>
-          <p>Description coming soon.</p>
+          <p>A double-strand bracelet featuring faceted aqua-blue crystal beads and golden accents that evoke a sparkling sea.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Crystal%20Tide%20Bracelet." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
@@ -487,7 +507,7 @@
         <div class="card-body">
           <div class="eyebrow">Bracelet</div>
           <h3>The Ivory Blossom Lattice</h3>
-          <p>Description coming soon.</p>
+          <p>A delicate, lace-like bracelet meticulously woven from ivory pearl beads into an intricate floral pattern.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Ivory%20Blossom%20Lattice." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
@@ -499,7 +519,7 @@
         <div class="card-body">
           <div class="eyebrow">Bracelet</div>
           <h3>The Lilac Teardrop Strand</h3>
-          <p>Description coming soon.</p>
+          <p>A stunning double-strand bracelet featuring faceted lilac teardrop beads beautifully interwoven with warm amber and gold accent beads for a radiant, layered look</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Lilac%20Teardrop%20Strand." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
@@ -511,7 +531,7 @@
         <div class="card-body">
           <div class="eyebrow">Bracelet</div>
           <h3>The Petite Kitty Crystal Beaded Bracelet</h3>
-          <p>Description coming soon.</p>
+          <p>A playful, minimalist Hello Kitty-inspired bracelet handcrafted with fine white, black, and amber faceted crystal beads subtly forming the iconic silhouette.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Petite%20Kitty%20Crystal%20Beaded%20Bracelet." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
@@ -523,7 +543,7 @@
         <div class="card-body">
           <div class="eyebrow">Bracelet</div>
           <h3>The Yin & Yang Eternal Bond</h3>
-          <p>Description coming soon.</p>
+          <p>striking contrast pairing luminous white beads with bold black beads, joined by a magnetic heart closure.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Yin%20%26%20Yang%20Eternal%20Bond." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
@@ -536,7 +556,7 @@
         <div class="card-body">
           <div class="eyebrow">Earrings</div>
           <h3>Delicate Pearl Drop Set</h3>
-          <p>Description coming soon.</p>
+          <p>Golden hook earrings featuring a single, luminous pearlescent teardrop.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Delicate%20Pearl%20Drop%20Set%20(Earrings)." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
@@ -548,7 +568,7 @@
         <div class="card-body">
           <div class="eyebrow">Earrings</div>
           <h3>Turquoise Tube & Gold Drop Lariat Set</h3>
-          <p>Description coming soon.</p>
+          <p>Drop earrings formed from a ring of vibrant blue tube beads finished with golden hardware.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20the%20Turquoise%20Tube%20%26%20Gold%20Drop%20Lariat%20Set%20(Earrings)." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
@@ -561,7 +581,7 @@
         <div class="card-body">
           <div class="eyebrow">Friendship Bands</div>
           <h3>The Aegean Duo</h3>
-          <p>Description coming soon.</p>
+          <p>A complementary two-piece set featuring sea-inspired chevron weaves and a slender twisted cord.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Aegean%20Duo." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
@@ -573,7 +593,7 @@
         <div class="card-body">
           <div class="eyebrow">Friendship Bands</div>
           <h3>The Caspian Plaid</h3>
-          <p>Description coming soon.</p>
+          <p>An intricately knotted friendship bracelet featuring a crisp, geometric diamond-plaid pattern woven in refreshing shades of cobalt blue, sky blue, and clean white.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Caspian%20Plaid." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
@@ -585,7 +605,7 @@
         <div class="card-body">
           <div class="eyebrow">Friendship Bands</div>
           <h3>The Rosewood Chevron</h3>
-          <p>Description coming soon.</p>
+          <p>A classic, beautifully woven pattern in soft pink and crisp white tones for an effortlessly casual look.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Rosewood%20Chevron." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
@@ -597,7 +617,7 @@
         <div class="card-body">
           <div class="eyebrow">Friendship Bands</div>
           <h3>The Scarlet Pearl Cord</h3>
-          <p>Description coming soon.</p>
+          <p>Rich, deep-red braided macramé bands stacked beautifully, anchored by a single luminous centerpiece pearl bead.</p>
           <a class="ask" href="https://wa.me/923211782222?text=Hi!%20I%27m%20interested%20in%20The%20Scarlet%20Pearl%20Cord." target="_blank" rel="noopener">Ask about this piece</a>
         </div>
       </div>
