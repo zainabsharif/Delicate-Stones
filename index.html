@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="./assets/page-transition.js"></script>
 <style>
   :root{
     --ink:#17140f;
@@ -20,6 +21,8 @@
     --teal:#4c6a63;
     --blush:#d9b7a1;
     --line: rgba(23,20,15,0.12);
+    --header-tan:#e6dcc8;
+    --gold-dark:#8a6a2e;
     --maxw: 1180px;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
@@ -92,12 +95,14 @@ nav.wrap{
   }
   .category-list button:hover,
   .category-list button.active{ background:var(--gold); color:var(--ink); border-color:var(--gold); }
+  .category-list button:hover{ filter:brightness(0.85); }
   .navlinks{ display:flex; gap:20px; font-size:0.88rem; letter-spacing:0.01em; white-space:nowrap; flex-shrink:0;}
-  .navlinks a{ position:relative; padding-bottom:4px;}
+  .navlinks a{ position:relative; padding-bottom:4px; transition:color 0.25s ease, text-shadow 0.25s ease;}
   .navlinks a::after{
     content:""; position:absolute; left:0; bottom:0; width:0%; height:1px; background:var(--gold);
     transition:width 0.3s ease;
   }
+  .navlinks a:hover{ color:var(--gold-dark); text-shadow:0 0 10px rgba(182,137,60,0.55); }
   .navlinks a:hover::after{ width:100%;}
   .btn{
     display:inline-flex; align-items:center; gap:8px;
@@ -105,14 +110,8 @@ nav.wrap{
     border:1px solid var(--ink); transition:all 0.25s ease;
   }
   .btn-solid{ background:var(--ink); color:var(--ivory);}
-  .btn-solid:hover{ background:var(--gold); border-color:var(--gold); color:var(--ink);}
-  .btn-ghost:hover{ background:var(--ink); color:var(--ivory);}
-.btn-wa{ border-color:#3b6a58; padding:10px 16px; font-size:0.85rem; white-space:nowrap; }
-  .btn-wa:hover{ background:#3b6a58; border-color:#3b6a58; color:#fff;}
-  @media (max-width:860px){ .navlinks{display:none;} }
-
- .wa-text-short{ display:none; }
-
+  .btn-solid:hover{ background:var(--gold); border-color:var(--gold); color:var(--ink); filter:brightness(0.85);}
+  .btn-ghost:hover{ background:var(--ink); color:var(--ivory); filter:brightness(0.85);}
 @media (max-width:860px){ .navlinks{display:none;} }
 
 @media (max-width:640px){
@@ -124,9 +123,6 @@ nav.wrap{
     font-size:1.05rem; letter-spacing:0.01em;
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
-  .wa-text-full{ display:none; }
-  .wa-text-short{ display:inline; }
-  .btn-wa{ padding:9px 14px; font-size:0.8rem; flex:none; white-space:nowrap; }
 }
 
   /* ---------- Hero ---------- */
@@ -170,8 +166,9 @@ nav.wrap{
   .card-body .eyebrow{ margin-bottom:0; font-size:0.85rem;}
   .card-body h3{ font-size:1.6rem; margin:0; line-height:1.2; overflow-wrap:break-word; word-break:break-word; hyphens:auto; white-space:normal;}
   .card-body p{ font-size:1.05rem; color:#5a5347; margin:0; line-height:1.65; overflow-wrap:break-word; word-break:break-word; white-space:normal;}
-  .card-body .ask{ font-size:0.95rem; letter-spacing:0.04em; color:var(--gold); display:inline-flex; gap:6px; align-items:center;}
+  .card-body .ask{ font-size:0.95rem; letter-spacing:0.04em; color:var(--gold); display:inline-flex; gap:6px; align-items:center; transition:filter 0.2s ease;}
   .card-body .ask::after{ content:"→"; transition:transform 0.25s ease;}
+  .card-body .ask:hover{ filter:brightness(0.75);}
   .card-body .ask:hover::after{ transform:translateX(4px);}
 
   /* ---------- Horizontal scroll rows (Best Sellers / Reviews) ---------- */
@@ -191,14 +188,14 @@ nav.wrap{
     box-shadow:0 10px 24px -10px rgba(23,20,15,0.3);
     font-size:1.1rem; color:var(--ink-dark); z-index:5; transition:all 0.2s ease;
   }
-  .scroll-arrow:hover{ background:var(--gold); color:var(--ink); border-color:var(--gold);}
+  .scroll-arrow:hover{ background:var(--gold); color:var(--ink); border-color:var(--gold); filter:brightness(0.85);}
   .scroll-arrow.left{ left:-10px; }
   .scroll-arrow.right{ right:-10px; }
   @media (max-width:760px){ .scroll-arrow{ display:none; } }
 
   /* Best Sellers cards */
   .bestseller-card{
-    width:230px; background:rgba(255,251,243,0.75); border:1px solid var(--line);
+    display:block; width:230px; background:rgba(255,251,243,0.75); border:1px solid var(--line);
     border-radius:4px; overflow:hidden; transition:transform 0.3s ease, box-shadow 0.3s ease;
   }
   .bestseller-card:hover{ transform:translateY(-6px); box-shadow:0 20px 40px -20px rgba(23,20,15,0.25);}
@@ -210,8 +207,9 @@ nav.wrap{
   }
   .bestseller-body{ padding:14px 16px 18px; display:flex; flex-direction:column; gap:8px;}
   .bestseller-body h3{ font-size:1.2rem; line-height:1.25; margin:0;}
-  .bestseller-body .ask{ font-size:0.88rem; letter-spacing:0.04em; color:var(--gold); display:inline-flex; gap:6px; align-items:center;}
+  .bestseller-body .ask{ font-size:0.88rem; letter-spacing:0.04em; color:var(--gold); display:inline-flex; gap:6px; align-items:center; transition:filter 0.2s ease;}
   .bestseller-body .ask::after{ content:"→"; transition:transform 0.25s ease;}
+  .bestseller-body .ask:hover{ filter:brightness(0.75);}
   .bestseller-body .ask:hover::after{ transform:translateX(4px);}
 
   /* Reviews cards */
@@ -283,55 +281,78 @@ nav.wrap{
     width:58px; height:58px; border-radius:50%;
     background:#3b6a58; display:flex; align-items:center; justify-content:center;
     box-shadow:0 10px 26px -8px rgba(30,60,50,0.55);
-    transition:transform 0.25s ease;
+    transition:transform 0.25s ease, filter 0.2s ease;
   }
-  .wa-float:hover{ transform:scale(1.08);}
+  .wa-float:hover{ transform:scale(1.08); filter:brightness(0.85);}
 
-  /* ---------- Chat widget ---------- */
-  .chat-toggle{
-    position:fixed; right:24px; bottom:94px; z-index:60;
-    width:58px; height:58px; border-radius:50%;
-    background:var(--ink); color:var(--ivory);
-    display:flex; align-items:center; justify-content:center;
-    box-shadow:0 10px 26px -8px rgba(23,20,15,0.5);
-    border:none; transition:transform 0.25s ease;
+  /* ---------- Three.js scroll reveal ---------- */
+  section, .hero{ perspective:1400px; }
+  .reveal-3d{ will-change:transform, opacity; backface-visibility:hidden; }
+
+  /* ---------- Custom cursor + sparkle trail ---------- */
+  body.custom-cursor-active, body.custom-cursor-active *{ cursor:none !important; }
+  .cursor-gem{
+    position:fixed; top:0; left:0; width:18px; height:18px; pointer-events:none; z-index:9999;
+    background:linear-gradient(135deg, var(--gold-light), var(--gold));
+    clip-path:polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+    box-shadow:0 0 10px rgba(182,137,60,0.55);
+    opacity:0; transition:opacity 0.25s ease, filter 0.15s ease;
   }
-  .chat-toggle:hover{ transform:scale(1.08);}
-  .chat-panel{
-    position:fixed; right:24px; bottom:164px; z-index:60;
-    width:340px; max-width:88vw; height:440px; max-height:70vh;
-    background:var(--card); border:1px solid var(--line); border-radius:14px;
-    box-shadow:0 30px 60px -20px rgba(23,20,15,0.4);
-    display:none; flex-direction:column; overflow:hidden;
+  .cursor-gem.active{ opacity:1; }
+  .cursor-gem.pressed{ filter:brightness(0.85); }
+  .sparkle{
+    position:fixed; top:0; left:0; pointer-events:none; z-index:9998;
+    background:radial-gradient(circle, #fff2d2 0%, var(--gold) 42%, var(--ink-dark) 78%, transparent 85%);
+    clip-path:polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%);
+    filter:drop-shadow(0 0 6px rgba(182,137,60,0.85)) drop-shadow(0 0 2px rgba(15,12,7,0.6));
+    animation:sparkle-pop 800ms ease-out forwards;
   }
-  .chat-panel.open{ display:flex;}
-  .chat-head{
-    background:var(--ink); color:var(--ivory); padding:16px 18px;
-    display:flex; align-items:center; gap:10px;
+  @keyframes sparkle-pop{
+    0%{ opacity:1; transform:translate(-50%,-50%) scale(0.35) rotate(0deg); }
+    50%{ opacity:1; transform:translate(-50%,-50%) scale(1.15) rotate(55deg); }
+    100%{ opacity:0; transform:translate(-50%,-50%) scale(1.4) rotate(95deg) translateY(-20px); }
   }
-  .chat-head .dot{ width:8px; height:8px; border-radius:50%; background:#5fd68e;}
-  .chat-head .title{ font-size:1.05rem;}
-  .chat-head .sub{ font-size:0.85rem; color:#c9c3b3;}
-  .chat-body{ flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px; background:var(--ivory);}
-  .msg{ max-width:82%; padding:10px 13px; border-radius:12px; font-size:0.95rem; line-height:1.5;}
-  .msg.bot{ background:var(--card); border:1px solid var(--line); align-self:flex-start; border-bottom-left-radius:2px;}
-  .msg.user{ background:var(--ink); color:var(--ivory); align-self:flex-end; border-bottom-right-radius:2px;}
-  .quick-replies{ display:flex; flex-wrap:wrap; gap:6px; padding:0 16px 12px; background:var(--ivory);}
-  .qr-btn{
-    font-size:0.85rem; padding:7px 12px; border-radius:999px; border:1px solid var(--line);
-    background:var(--card); color:#4a453b;
+
+  /* ---------- Page transition (logo grid zoom) ---------- */
+  .pt-overlay{
+    position:fixed; inset:0; z-index:99999; display:none;
+    align-items:center; justify-content:center;
+    background:radial-gradient(circle at center, var(--ivory-soft) 0%, var(--ivory) 72%);
+    overflow:hidden; opacity:1; transform:scale(1);
+    transition:opacity 0.5s ease, transform 0.6s cubic-bezier(.5,0,.75,1);
   }
-  .qr-btn:hover{ border-color:var(--gold); color:var(--gold);}
-  .chat-input{ display:flex; border-top:1px solid var(--line); background:var(--card);}
-  .chat-input input{
-    flex:1; border:none; background:transparent; padding:14px 16px; font-family:inherit; font-size:1rem; color:var(--ink); outline:none;
+  .pt-overlay.pt-show{ display:flex; }
+  .pt-overlay.pt-enter-open{ opacity:0; transform:scale(1.15); }
+  .pt-logo-grid{
+    position:relative; width:260px; height:260px; border-radius:50%; overflow:hidden;
+    display:grid; grid-template-columns:repeat(6,1fr); grid-template-rows:repeat(6,1fr);
+    box-shadow:0 0 70px rgba(182,137,60,0.4);
+    transition:transform 0.55s cubic-bezier(.5,0,.75,1), opacity 0.5s ease 0.1s;
   }
-  .chat-input button{
-    border:none; background:transparent; color:var(--gold); padding:0 16px; font-size:1rem;
+  .pt-tile{
+    background-size:600% 600%;
+    transform:translate(0,0) scale(1) rotate(0deg);
+    opacity:1;
+    transition:transform 0.5s cubic-bezier(.3,.75,.4,1), opacity 0.5s ease;
+  }
+  .pt-logo-grid.pt-burst .pt-tile{
+    transform:var(--tile-out) scale(0.88) rotate(var(--tile-rot,0deg));
+  }
+  .pt-logo-grid.pt-zoom{ transform:scale(15); opacity:0; }
+  .pt-sparkle-layer{ position:absolute; inset:0; pointer-events:none; }
+  .sparkle-burst{
+    position:absolute; left:50%; top:50%;
+    animation:sparkle-burst-pop 950ms ease-out forwards;
+  }
+  @keyframes sparkle-burst-pop{
+    0%{ opacity:0; transform:translate(-50%,-50%) scale(0.25) rotate(0deg); }
+    28%{ opacity:1; transform:translate(-50%,-50%) scale(1.1) rotate(30deg); }
+    100%{ opacity:0; transform:translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0.5) rotate(140deg); }
   }
 </style>
 </head>
 <body>
+<script>if (window.__pt) { window.__pt.earlyEnterCheck(); }</script>
 
 <header>
   <nav class="wrap">
@@ -344,15 +365,11 @@ nav.wrap{
     <div class="navlinks">
       <a href="collections.html">Collections</a>
       <a href="#bestsellers">Best Sellers</a>
-      <a href="#about">About</a>
-      <a href="#instagram">Instagram</a>
       <a href="#reviews">Reviews</a>
+      <a href="#instagram">Instagram</a>
+      <a href="#about">About</a>
       <a href="#order">How to Order</a>
     </div>
-<a class="btn btn-solid btn-wa" href="https://wa.me/923211782222?text=Hi%20Daniya!%20I%27d%20love%20to%20know%20more%20about%20your%20jewelry." target="_blank" rel="noopener">
-  <span class="wa-text-full">Message on WhatsApp</span>
-  <span class="wa-text-short">WhatsApp</span>
-</a>
   </nav>
 </header>
 
@@ -374,6 +391,7 @@ nav.wrap{
             <circle cx="210" cy="210" r="175" />
           </clipPath>
         </defs>
+        <circle cx="210" cy="210" r="190" stroke="#e6dcc8" stroke-opacity="1" stroke-width="30"/>
         <circle cx="210" cy="210" r="205" stroke="#b6893c" stroke-opacity="0.35" stroke-width="1"/>
         <image x="30" y="30" width="360" height="360" xlink:href="./assets/logo.jpg" clip-path="url(#logoClip)" preserveAspectRatio="xMidYMid slice" />
       </svg>
@@ -498,52 +516,82 @@ nav.wrap{
 
 <div class="beads" id="beadsB"></div>
 
-<section class="about" id="about">
-  <div class="wrap">
-    <div>
-      <svg width="220" height="220" viewBox="0 0 220 220" style="margin:0 auto; display:block;">
-        <defs>
-          <clipPath id="aboutLogoClip">
-            <circle cx="110" cy="110" r="100" />
-          </clipPath>
-        </defs>
-        <circle cx="110" cy="110" r="100" fill="none" stroke="#e2c88f" stroke-width="1" stroke-opacity="0.4"/>
-        <image x="10" y="10" width="200" height="200" xlink:href="./assets/logo.jpg" clip-path="url(#aboutLogoClip)" preserveAspectRatio="xMidYMid slice" />
-      </svg>
-    </div>
-    <div>
-      <div class="eyebrow" style="color:#e2c88f;">The Studio</div>
-      <h2 style="color:#e2c88f;">By Daniya, bead by bead.</h2>
-      <p>DelicateStones started as a small collection of beaded pieces made for friends. Every bracelet and necklace is still strung by hand. Threaded friendship bands and keychains woven with skill.</p>
-    
-      <ul class="values">
-        <li><span class="dot"></span> Made to order, usually within a few days</li>
-        <li><span class="dot"></span> Adjustable sizing on most bracelets</li>
-       
-        
-      </ul>
-      <div class="about-sign">— Daniya</div>
-    </div>
-  </div>
-</section>
-
-<section id="instagram">
+<section id="shop-collections">
   <div class="wrap">
     <div class="section-head">
-      <div class="eyebrow" style="justify-content:center;">Follow the Studio</div>
-      <h2>@_delicatestones_</h2>
-      <p>New pieces, restocks, and behind-the-scenes beading go up on Instagram first.</p>
+      <div class="eyebrow" style="justify-content:center;">Browse by Type</div>
+      <h2>Collections</h2>
+      <p>Explore each collection, or scroll through to see everything we make. Tap a card to view the full collection.</p>
     </div>
-    <div class="ig-grid">
-      <a class="ig-tile" href="https://instagram.com/_delicatestones_" target="_blank" rel="noopener" aria-label="Open @_delicatestones_ on Instagram"><img src="./assets/Items/Bracelets/Pearl Blossom Woven Bracelet.jpeg" alt="Pearl Blossom Woven Bracelet" style="width:100%; height:100%; object-fit:cover; border-radius:6px;"/></a>
-      <a class="ig-tile" href="https://instagram.com/_delicatestones_" target="_blank" rel="noopener" aria-label="Open @_delicatestones_ on Instagram"><img src="./assets/Items/Earrings/Delicate Pearl Drop Set.jpeg" alt="Delicate Pearl Drop Set (Earrings)" style="width:100%; height:100%; object-fit:cover; border-radius:6px;"/></a>
-      <a class="ig-tile" href="https://instagram.com/_delicatestones_" target="_blank" rel="noopener" aria-label="Open @_delicatestones_ on Instagram"><img src="./assets/Items/Friendship Bands/Earth & Weave.jpeg" alt="Earth & Weave Friendship Bands" style="width:100%; height:100%; object-fit:cover; border-radius:6px;"/></a>
-      <a class="ig-tile" href="https://instagram.com/_delicatestones_" target="_blank" rel="noopener" aria-label="Open @_delicatestones_ on Instagram"><img src="./assets/Items/Keychains/Twilight Woven Bag Charm Keychain.jpeg" alt="Twilight Woven Bag Charm Keychain" style="width:100%; height:100%; object-fit:cover; border-radius:6px;"/></a>
-      <a class="ig-tile" href="https://instagram.com/_delicatestones_" target="_blank" rel="noopener" aria-label="Open @_delicatestones_ on Instagram"><img src="./assets/Items/Necklaces/The Obsidian Y-Lariat Necklace.jpeg" alt="The Obsidian Y-Lariat Necklace" style="width:100%; height:100%; object-fit:cover; border-radius:6px;"/></a>
-      <a class="ig-tile" href="https://instagram.com/_delicatestones_" target="_blank" rel="noopener" aria-label="Open @_delicatestones_ on Instagram"><img src="./assets/Items/Rings/Pearl Blossom Woven Beaded Ring.jpeg" alt="Pearl Blossom Woven Beaded Ring" style="width:100%; height:100%; object-fit:cover; border-radius:6px;"/></a>
-    </div>
-    <div class="ig-cta">
-      <a class="btn btn-solid" href="https://instagram.com/_delicatestones_" target="_blank" rel="noopener">Follow on Instagram</a>
+    <div class="scroll-row-wrap">
+      <button type="button" class="scroll-arrow left" id="colLeft" aria-label="Scroll collections left">&#8592;</button>
+      <div class="scroll-row" id="collectionsRow">
+
+        <a class="scroll-item bestseller-card" href="collections.html#necklace">
+          <div class="bestseller-art">
+            <img src="./assets/Items/Necklaces/The Obsidian Y-Lariat Necklace.jpeg" alt="Necklaces">
+          </div>
+          <div class="bestseller-body">
+            <h3>Necklaces</h3>
+          </div>
+        </a>
+
+        <a class="scroll-item bestseller-card" href="collections.html#bracelet">
+          <div class="bestseller-art">
+            <img src="./assets/Items/Bracelets/Pearl Blossom Woven Bracelet.jpeg" alt="Bracelets">
+          </div>
+          <div class="bestseller-body">
+            <h3>Bracelets</h3>
+          </div>
+        </a>
+
+        <a class="scroll-item bestseller-card" href="collections.html#earring">
+          <div class="bestseller-art">
+            <img src="./assets/Items/Earrings/Delicate Pearl Drop Set.jpeg" alt="Earrings">
+          </div>
+          <div class="bestseller-body">
+            <h3>Earrings</h3>
+          </div>
+        </a>
+
+        <a class="scroll-item bestseller-card" href="collections.html#ring">
+          <div class="bestseller-art">
+            <img src="./assets/Items/Rings/Pearl Blossom Woven Beaded Ring.jpeg" alt="Rings">
+          </div>
+          <div class="bestseller-body">
+            <h3>Rings</h3>
+          </div>
+        </a>
+
+        <a class="scroll-item bestseller-card" href="collections.html#sets">
+          <div class="bestseller-art">
+            <img src="./assets/Items/Sets/The Yin & Yang Eternal Bond.jpeg" alt="Sets">
+          </div>
+          <div class="bestseller-body">
+            <h3>Sets</h3>
+          </div>
+        </a>
+
+        <a class="scroll-item bestseller-card" href="collections.html#friendship">
+          <div class="bestseller-art">
+            <img src="./assets/Items/Friendship Bands/Earth & Weave.jpeg" alt="Friendship Bands">
+          </div>
+          <div class="bestseller-body">
+            <h3>Friendship Bands</h3>
+          </div>
+        </a>
+
+        <a class="scroll-item bestseller-card" href="collections.html#keychain">
+          <div class="bestseller-art">
+            <img src="./assets/Items/Keychains/Twilight Woven Bag Charm Keychain.jpeg" alt="Keychains">
+          </div>
+          <div class="bestseller-body">
+            <h3>Keychains</h3>
+          </div>
+        </a>
+
+      </div>
+      <button type="button" class="scroll-arrow right" id="colRight" aria-label="Scroll collections right">&#8594;</button>
     </div>
   </div>
 </section>
@@ -659,6 +707,56 @@ nav.wrap{
 
 <div class="beads" id="beadsC"></div>
 
+<section id="instagram">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow" style="justify-content:center;">Follow the Studio</div>
+      <h2>@_delicatestones_</h2>
+      <p>New pieces, restocks, and behind-the-scenes beading go up on Instagram first.</p>
+    </div>
+    <div class="ig-grid">
+      <a class="ig-tile" href="https://instagram.com/_delicatestones_" target="_blank" rel="noopener" aria-label="Open @_delicatestones_ on Instagram"><img src="./assets/Items/Bracelets/Pearl Blossom Woven Bracelet.jpeg" alt="Pearl Blossom Woven Bracelet" style="width:100%; height:100%; object-fit:cover; border-radius:6px;"/></a>
+      <a class="ig-tile" href="https://instagram.com/_delicatestones_" target="_blank" rel="noopener" aria-label="Open @_delicatestones_ on Instagram"><img src="./assets/Items/Earrings/Delicate Pearl Drop Set.jpeg" alt="Delicate Pearl Drop Set (Earrings)" style="width:100%; height:100%; object-fit:cover; border-radius:6px;"/></a>
+      <a class="ig-tile" href="https://instagram.com/_delicatestones_" target="_blank" rel="noopener" aria-label="Open @_delicatestones_ on Instagram"><img src="./assets/Items/Friendship Bands/Earth & Weave.jpeg" alt="Earth & Weave Friendship Bands" style="width:100%; height:100%; object-fit:cover; border-radius:6px;"/></a>
+      <a class="ig-tile" href="https://instagram.com/_delicatestones_" target="_blank" rel="noopener" aria-label="Open @_delicatestones_ on Instagram"><img src="./assets/Items/Keychains/Twilight Woven Bag Charm Keychain.jpeg" alt="Twilight Woven Bag Charm Keychain" style="width:100%; height:100%; object-fit:cover; border-radius:6px;"/></a>
+      <a class="ig-tile" href="https://instagram.com/_delicatestones_" target="_blank" rel="noopener" aria-label="Open @_delicatestones_ on Instagram"><img src="./assets/Items/Necklaces/The Obsidian Y-Lariat Necklace.jpeg" alt="The Obsidian Y-Lariat Necklace" style="width:100%; height:100%; object-fit:cover; border-radius:6px;"/></a>
+      <a class="ig-tile" href="https://instagram.com/_delicatestones_" target="_blank" rel="noopener" aria-label="Open @_delicatestones_ on Instagram"><img src="./assets/Items/Rings/Pearl Blossom Woven Beaded Ring.jpeg" alt="Pearl Blossom Woven Beaded Ring" style="width:100%; height:100%; object-fit:cover; border-radius:6px;"/></a>
+    </div>
+    <div class="ig-cta">
+      <a class="btn btn-solid" href="https://instagram.com/_delicatestones_" target="_blank" rel="noopener">Follow on Instagram</a>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="wrap">
+    <div>
+      <svg width="220" height="220" viewBox="0 0 220 220" style="margin:0 auto; display:block;">
+        <defs>
+          <clipPath id="aboutLogoClip">
+            <circle cx="110" cy="110" r="100" />
+          </clipPath>
+        </defs>
+        <circle cx="110" cy="110" r="100" fill="none" stroke="#e2c88f" stroke-width="1" stroke-opacity="0.4"/>
+        <image x="10" y="10" width="200" height="200" xlink:href="./assets/logo.jpg" clip-path="url(#aboutLogoClip)" preserveAspectRatio="xMidYMid slice" />
+      </svg>
+    </div>
+    <div>
+      <div class="eyebrow" style="color:#e2c88f;">The Studio</div>
+      <h2 style="color:#e2c88f;">By Daniya, bead by bead.</h2>
+      <p>DelicateStones started as a small collection of beaded pieces made for friends. Every bracelet and necklace is still strung by hand. Threaded friendship bands and keychains woven with skill.</p>
+
+      <ul class="values">
+        <li><span class="dot"></span> Made to order, usually within a few days</li>
+        <li><span class="dot"></span> Adjustable sizing on most bracelets</li>
+
+
+      </ul>
+      <div class="about-sign">— Daniya</div>
+    </div>
+  </div>
+</section>
+
 <section id="order">
   <div class="wrap">
     <div class="section-head">
@@ -703,8 +801,9 @@ nav.wrap{
         <div class="flinks">
           <a href="collections.html">Collections</a>
           <a href="#bestsellers">Best Sellers</a>
-          <a href="#about">About</a>
           <a href="#reviews">Reviews</a>
+          <a href="#instagram">Instagram</a>
+          <a href="#about">About</a>
           <a href="#order">How to Order</a>
         </div>
       </div>
@@ -728,27 +827,7 @@ nav.wrap{
   <svg width="28" height="28" viewBox="0 0 24 24" fill="white"><path d="M17.47 14.38c-.28-.14-1.64-.81-1.9-.9-.25-.09-.44-.14-.62.14-.18.28-.72.9-.88 1.08-.16.18-.32.2-.6.07-.28-.14-1.18-.44-2.24-1.39-.83-.74-1.39-1.66-1.55-1.94-.16-.28-.02-.43.12-.57.13-.13.28-.32.42-.49.14-.16.18-.28.28-.46.09-.18.05-.35-.02-.49-.07-.14-.62-1.5-.85-2.06-.22-.53-.45-.46-.62-.47-.16-.01-.35-.01-.53-.01-.18 0-.49.07-.74.35-.25.28-.97.95-.97 2.31 0 1.36.99 2.68 1.13 2.86.14.18 1.95 2.97 4.72 4.16.66.28 1.17.45 1.57.58.66.21 1.26.18 1.73.11.53-.08 1.64-.67 1.87-1.32.23-.65.23-1.2.16-1.32-.07-.12-.25-.19-.53-.33z"/><path d="M12.02 2C6.5 2 2.02 6.48 2.02 12c0 1.87.51 3.62 1.4 5.12L2 22l5.02-1.38A9.94 9.94 0 0 0 12.02 22C17.54 22 22 17.52 22 12S17.54 2 12.02 2zm0 18.13c-1.72 0-3.32-.5-4.66-1.36l-.33-.2-3.02.83.8-2.95-.22-.34a8.14 8.14 0 0 1-1.27-4.11c0-4.5 3.66-8.16 8.7-8.16 4.5 0 8.16 3.66 8.16 8.16s-3.66 8.13-8.16 8.13z"/></svg>
 </a>
 
-<!-- Chat widget -->
-<button class="chat-toggle" id="chatToggle" aria-label="Open chat">
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12a8 8 0 0 1-8 8H8l-5 3 1.4-5.6A8 8 0 1 1 21 12z"/></svg>
-</button>
-
-<div class="chat-panel" id="chatPanel">
-  <div class="chat-head">
-    <span class="dot"></span>
-    <div>
-      <div class="title">DelicateStones Assistant</div>
-      <div class="sub">Usually replies instantly</div>
-    </div>
-  </div>
-  <div class="chat-body" id="chatBody"></div>
-  <div class="quick-replies" id="quickReplies"></div>
-  <div class="chat-input">
-    <input type="text" id="chatInput" placeholder="Ask about price, size, shipping...">
-    <button id="chatSend">Send</button>
-  </div>
-</div>
-
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
 <script>
   // ---- Beaded divider generator (signature element) ----
   function makeBeads(id, count){
@@ -774,87 +853,139 @@ nav.wrap{
   }
   setupScrollArrows('bestsellersRow', 'bsLeft', 'bsRight');
   setupScrollArrows('reviewsRow', 'revLeft', 'revRight');
+  setupScrollArrows('collectionsRow', 'colLeft', 'colRight');
 
-  // ---- Automated customer service bot (rule-based, works fully offline) ----
-  const chatToggle = document.getElementById('chatToggle');
-  const chatPanel = document.getElementById('chatPanel');
-  const chatBody = document.getElementById('chatBody');
-  const chatInput = document.getElementById('chatInput');
-  const chatSend = document.getElementById('chatSend');
-  const quickReplies = document.getElementById('quickReplies');
-  const WA_NUMBER = "923211782222";
+  // ---- Three.js powered section reveal: content flies/rotates in from empty space as each section scrolls into view ----
+  (function(){
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (typeof THREE === 'undefined' || reduceMotion) return;
 
-  const FAQ = [
-    { keys:['price','cost','how much','rate'], reply:"Bracelets typically range from Rs. 800–1800 and necklaces from Rs. 1500–3500, depending on materials. Want an exact quote for a specific piece?" },
-    { keys:['material','made of','stone','bead','pearl'], reply:"Pieces are made with semi-precious stones, freshwater pearls, glass beads, and gold-filled or gold-plated accents, all strung by hand." },
-    { keys:['custom','customize','change color','change length','size'], reply:"Yes! Most pieces can be customized — length, bead color, or adding a charm. Message us on WhatsApp with what you have in mind and we'll confirm it's doable." },
-    { keys:['shipping','deliver','delivery','how long','when will'], reply:"Orders are made fresh and usually ship within 3–5 days within Pakistan, plus courier transit time. We'll share tracking on WhatsApp once it's out." },
-    { keys:['care','clean','water','sweat'], reply:"Keep pieces dry, avoid perfume/lotion contact, and store them flat in the box when not worn — that keeps the beads and finish looking new." },
-    { keys:['order','buy','purchase','how to order'], reply:"Easiest way: tell me which piece you like, then tap the WhatsApp button and Daniya will confirm details and payment." },
-    { keys:['return','exchange','refund'], reply:"Since pieces are made to order, we handle returns/exchanges case by case — message us on WhatsApp if something isn't right and we'll sort it out." },
-    { keys:['payment','pay','cod','cash on delivery','bank'], reply:"Payment options are confirmed directly over WhatsApp — bank transfer and cash on delivery (select areas) are both usually available." },
-  ];
+    const targets = document.querySelectorAll(
+      '.hero .wrap > div, .section-head, .scroll-row-wrap, .about .wrap > div, .ig-grid, .ig-cta, .steps .step'
+    );
 
-  function addMsg(text, who){
-    const div = document.createElement('div');
-    div.className = 'msg ' + who;
-    div.textContent = text;
-    chatBody.appendChild(div);
-    chatBody.scrollTop = chatBody.scrollHeight;
-  }
+    const state = new Map();
 
-  function setQuickReplies(list){
-    quickReplies.innerHTML = '';
-    list.forEach(q=>{
-      const b = document.createElement('button');
-      b.className = 'qr-btn';
-      b.textContent = q;
-      b.onclick = ()=> handleUserMessage(q);
-      quickReplies.appendChild(b);
+    targets.forEach((el, i) => {
+      el.classList.add('reveal-3d');
+      el.style.transformOrigin = 'center bottom';
+      const obj = new THREE.Object3D();
+      obj.position.set(0, 70, -260);
+      obj.rotation.x = -0.35;
+      state.set(el, {
+        obj,
+        from: { pos: obj.position.clone(), rot: obj.rotation.clone() },
+        done: false,
+        delay: (i % 3) * 90
+      });
+      writeTransform(el, obj);
+      el.style.opacity = '0';
     });
-  }
 
-  function botReply(userText){
-    const t = userText.toLowerCase();
-    const hit = FAQ.find(f => f.keys.some(k => t.includes(k)));
-    if(hit){
-      addMsg(hit.reply, 'bot');
-    } else {
-      addMsg("I might not have that exact answer, but Daniya will! Want me to open WhatsApp so you can ask directly?", 'bot');
-      setQuickReplies(['Yes, open WhatsApp']);
-      return;
+    function writeTransform(el, obj){
+      obj.updateMatrix();
+      el.style.transform = 'matrix3d(' + obj.matrix.elements.join(',') + ')';
     }
-    setQuickReplies(['Pricing', 'Customization', 'Shipping', 'Talk to Daniya on WhatsApp']);
-  }
 
-  function handleUserMessage(text){
-    addMsg(text, 'user');
-    if(/whatsapp|talk to daniya|yes, open whatsapp/i.test(text)){
-      setTimeout(()=>{
-        addMsg("Opening WhatsApp for you now — Daniya will take it from here!", 'bot');
-        window.open(`https://wa.me/${WA_NUMBER}?text=` + encodeURIComponent("Hi Daniya! I have a question: "), '_blank');
-      }, 400);
-      return;
-    }
-    setTimeout(()=> botReply(text), 450);
-  }
+    function animateIn(el){
+      const s = state.get(el);
+      if (!s || s.done) return;
+      s.done = true;
+      const startTime = performance.now() + s.delay;
+      const duration = 750;
 
-  chatToggle.onclick = ()=>{
-    chatPanel.classList.toggle('open');
-    if(chatBody.childElementCount === 0){
-      addMsg("Hi! I'm the DelicateStones assistant. Ask me about pricing, materials, customization, or shipping — or I can connect you straight to Daniya on WhatsApp.", 'bot');
-      setQuickReplies(['Pricing', 'Customization', 'Shipping', 'Talk to Daniya on WhatsApp']);
+      function tick(now){
+        if (now < startTime){ requestAnimationFrame(tick); return; }
+        const t = Math.min((now - startTime) / duration, 1);
+        const eased = 1 - Math.pow(1 - t, 3);
+        s.obj.position.set(
+          s.from.pos.x,
+          s.from.pos.y * (1 - eased),
+          s.from.pos.z * (1 - eased)
+        );
+        s.obj.rotation.x = s.from.rot.x * (1 - eased);
+        writeTransform(el, s.obj);
+        el.style.opacity = String(eased);
+        if (t < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
     }
-  };
-  chatSend.onclick = ()=>{
-    const v = chatInput.value.trim();
-    if(!v) return;
-    handleUserMessage(v);
-    chatInput.value = '';
-  };
-  chatInput.addEventListener('keydown', e=>{
-    if(e.key === 'Enter'){ chatSend.click(); }
-  });
+
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting){
+          animateIn(entry.target);
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2, rootMargin: '0px 0px -10% 0px' });
+
+    targets.forEach((el) => io.observe(el));
+  })();
+
+  // ---- Custom gem cursor with a trailing sparkle trail ----
+  (function(){
+    const finePointer = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!finePointer || reduceMotion) return;
+
+    document.body.classList.add('custom-cursor-active');
+
+    const gem = document.createElement('div');
+    gem.className = 'cursor-gem';
+    document.body.appendChild(gem);
+
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let gemX = mouseX;
+    let gemY = mouseY;
+    let pressed = false;
+    let lastSparkle = 0;
+
+    function spawnSparkle(x, y){
+      const s = document.createElement('div');
+      s.className = 'sparkle';
+      const size = 8 + Math.random() * 8;
+      s.style.width = size + 'px';
+      s.style.height = size + 'px';
+      s.style.left = (x + (Math.random() - 0.5) * 14) + 'px';
+      s.style.top = (y + (Math.random() - 0.5) * 14) + 'px';
+      document.body.appendChild(s);
+      s.addEventListener('animationend', () => s.remove());
+      setTimeout(() => { if (s.isConnected) s.remove(); }, 1000);
+    }
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      gem.classList.add('active');
+      const now = performance.now();
+      if (now - lastSparkle > 25){
+        lastSparkle = now;
+        spawnSparkle(mouseX, mouseY);
+      }
+    });
+
+    window.addEventListener('mousedown', () => { pressed = true; });
+    window.addEventListener('mouseup', () => { pressed = false; });
+    document.addEventListener('mouseleave', () => gem.classList.remove('active'));
+
+    function loop(){
+      gemX += (mouseX - gemX) * 0.25;
+      gemY += (mouseY - gemY) * 0.25;
+      const scale = pressed ? 0.8 : 1;
+      gem.style.transform = 'translate3d(' + gemX + 'px,' + gemY + 'px,0) translate(-50%,-50%) scale(' + scale + ')';
+      gem.classList.toggle('pressed', pressed);
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  })();
+
+  if (window.__pt) {
+    window.__pt.initLinks();
+    window.__pt.initAnchorLinks();
+    window.__pt.completeEnterAnimation();
+  }
 </script>
 
 </body>
