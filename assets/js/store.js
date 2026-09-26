@@ -25,6 +25,19 @@ export const CATEGORIES = {
   keychain: 'Keychain',
 };
 
+// Categories that are split further. Products store the key in `subcategory`.
+export const SUBCATEGORIES = {
+  bracelet: { single: 'Single Bracelets', grouped: 'Grouped Bracelets' },
+  friendship: { single: 'Single Bands', grouped: 'Grouped Bands' },
+};
+export const SUBCATEGORY_SHORT = { single: 'Single', grouped: 'Grouped' };
+
+export function categoryLabel(product) {
+  const base = CATEGORIES[product.category] || product.category;
+  const sub = SUBCATEGORIES[product.category] && SUBCATEGORY_SHORT[product.subcategory];
+  return sub ? `${base} · ${sub}` : base;
+}
+
 // ---------- Helpers ----------
 export function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, (c) => (

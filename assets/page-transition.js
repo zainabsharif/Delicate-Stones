@@ -210,6 +210,22 @@
     }
   }
 
+  // Going Back/Forward restores the page exactly as it was left — mid exit-animation,
+  // with the overlay covering everything. Clear it whenever a page comes back from that cache.
+  window.addEventListener('pageshow', function (e) {
+    if (!e.persisted) return;
+    try { sessionStorage.removeItem(FLAG); } catch (err) {}
+    inPageBusy = false;
+    var overlay = document.getElementById('ptOverlay');
+    if (!overlay) return;
+    overlay.classList.remove('pt-show', 'pt-enter-open');
+    var grid = document.getElementById('ptGrid');
+    if (grid) {
+      grid.classList.remove('pt-burst', 'pt-zoom');
+      grid.style.display = '';
+    }
+  });
+
   window.__pt = {
     earlyEnterCheck: earlyEnterCheck,
     completeEnterAnimation: completeEnterAnimation,

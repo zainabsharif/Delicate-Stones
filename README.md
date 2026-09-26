@@ -9,7 +9,7 @@
 <br>
 
 [![Live Site](https://img.shields.io/badge/live_site-visit-b6893c?style=for-the-badge&logo=googlechrome&logoColor=white)](https://zainabsharif.github.io/Delicate-Stones/)
-[![Instagram](https://img.shields.io/badge/instagram-@__delicatestones__-e2c88f?style=for-the-badge&logo=instagram&logoColor=white&labelColor=b6893c)](https://instagram.com/_delicatestones_)
+[![Instagram](https://img.shields.io/badge/instagram-@delicatestones__-e2c88f?style=for-the-badge&logo=instagram&logoColor=white&labelColor=b6893c)](https://www.instagram.com/delicatestones_/)
 [![WhatsApp](https://img.shields.io/badge/whatsapp-message_daniya-4c6a63?style=for-the-badge&logo=whatsapp&logoColor=white)](https://wa.me/923211782222)
 
 </div>

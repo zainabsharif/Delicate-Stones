@@ -97,6 +97,14 @@ const RAW = [
     'Classic hand-braided woven chevron bracelet featuring a bold red, white, and dark blue pattern for a nautical or Americana-inspired everyday look.'],
 ];
 
+// Bracelets and friendship bands are split into single pieces and grouped (multi-band) pieces.
+const GROUPED = new Set(['Trio Love', 'The Aegean Duo', 'The Scarlet Pearl Cord']);
+
+function subcategoryFor(category, name) {
+  if (category !== 'bracelet' && category !== 'friendship') return null;
+  return GROUPED.has(name) ? 'grouped' : 'single';
+}
+
 function slug(s) {
   return s.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
@@ -105,6 +113,7 @@ export const SEED_PRODUCTS = RAW.map(([category, name, image, description], i) =
   id: slug(category + ' ' + name),
   name,
   category,
+  subcategory: subcategoryFor(category, name),
   description,
   image: I + image,
   price: null,

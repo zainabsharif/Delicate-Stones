@@ -1,6 +1,6 @@
 // ---- Collections page: product grid, category filter, reviews ----
 import {
-  isConfigured, CATEGORIES, loadProducts, loadAllReviews, reviewStats, hasPrice,
+  isConfigured, SUBCATEGORIES, categoryLabel, loadProducts, loadAllReviews, reviewStats, hasPrice,
   formatPrice, escapeHtml, stars, waLink, formatDate, normalizePhone, isValidPhone,
   checkReviewEligibility, submitReview,
 } from './store.js';
@@ -11,6 +11,7 @@ const buttons = document.querySelectorAll('.category-list button');
 let products = [];
 let stats = new Map();
 let currentCategory = 'all';
+let currentSub = 'all';
 
 initCart();
 init();
@@ -55,10 +56,10 @@ function cardHtml(p) {
     ? `<div class="price">${formatPrice(p.price)}</div>`
     : (isConfigured ? '<div class="price muted">Price on request</div>' : '');
   return `
-    <div class="card" data-category="${escapeHtml(p.category)}">
+    <div class="card" data-category="${escapeHtml(p.category)}" data-sub="${escapeHtml(p.subcategory || '')}">
       <div class="card-art"><img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy"></div>
       <div class="card-body">
-        <div class="eyebrow">${escapeHtml(CATEGORIES[p.category] || p.category)}</div>
+        <div class="eyebrow">${escapeHtml(categoryLabel(p))}</div>
         <h3>${escapeHtml(p.name)}</h3>
         ${ratingHtml(p)}
         <p class="desc">${escapeHtml(p.description)}</p>
@@ -77,7 +78,7 @@ function renderGrid() {
   grid.innerHTML = products.length
     ? products.map(cardHtml).join('')
     : '<p class="ds-loading">New pieces are on their way — check back soon.</p>';
-  applyFilter(currentCategory);
+  applyFilter(currentCategory, currentSub);
 }
 
 grid.addEventListener('click', (e) => {
@@ -91,27 +92,56 @@ grid.addEventListener('click', (e) => {
   if (rev) openReviews(rev.dataset.reviews);
 });
 
-// ---------- Category filter ----------
-function applyFilter(category) {
+// ---------- Category + sub-category filter ----------
+// Bracelets and friendship bands get a second row: All / Single / Grouped.
+const subList = document.createElement('div');
+subList.className = 'category-list subcategory-list';
+subList.setAttribute('aria-label', 'Sub-categories');
+subList.hidden = true;
+document.querySelector('.category-list').after(subList);
+
+function renderSubFilter(category) {
+  const subs = SUBCATEGORIES[category];
+  subList.hidden = !subs;
+  if (!subs) return;
+  const all = { all: 'All ' + document.querySelector(`.category-list button[data-category="${category}"]`).textContent };
+  subList.innerHTML = Object.entries({ ...all, ...subs }).map(([key, label]) =>
+    `<button type="button" data-sub="${key}" class="${key === currentSub ? 'active' : ''}">${escapeHtml(label)}</button>`).join('');
+}
+
+function applyFilter(category, sub = 'all') {
   currentCategory = category;
+  currentSub = SUBCATEGORIES[category] && (sub === 'all' || SUBCATEGORIES[category][sub]) ? sub : 'all';
   buttons.forEach((btn) => btn.classList.toggle('active', btn.dataset.category === category));
+  renderSubFilter(category);
   grid.querySelectorAll('.card').forEach((card) => {
-    card.style.display = category === 'all' || card.dataset.category === category ? '' : 'none';
+    const inCategory = category === 'all' || card.dataset.category === category;
+    const inSub = currentSub === 'all' || card.dataset.sub === currentSub;
+    card.style.display = inCategory && inSub ? '' : 'none';
   });
+}
+
+function animateFilter(category, sub) {
+  if (window.__pt && window.__pt.playInPage) window.__pt.playInPage(() => applyFilter(category, sub));
+  else applyFilter(category, sub);
 }
 
 function setupFilter() {
   buttons.forEach((button) => {
     button.addEventListener('click', () => {
-      const category = button.dataset.category;
       if (button.classList.contains('active')) return;
-      if (window.__pt && window.__pt.playInPage) window.__pt.playInPage(() => applyFilter(category));
-      else applyFilter(category);
+      animateFilter(button.dataset.category);
     });
   });
-  const requested = window.location.hash.replace('#', '');
+  subList.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-sub]');
+    if (!b || b.classList.contains('active')) return;
+    animateFilter(currentCategory, b.dataset.sub);
+  });
+  // Links like collections.html#bracelet or collections.html#bracelet-grouped
+  const [requested, requestedSub] = window.location.hash.replace('#', '').split('-');
   const valid = Array.from(buttons).map((b) => b.dataset.category);
-  applyFilter(valid.includes(requested) ? requested : 'all');
+  applyFilter(valid.includes(requested) ? requested : 'all', requestedSub || 'all');
 }
 
 // ---------- Reviews modal ----------
