@@ -1,0 +1,81 @@
+rules_version = '2';
+
+// Paste this into Firebase console → Firestore Database → Rules, then Publish.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Store owners: a document admins/{uid} exists for each owner account (created by hand in the console).
+    function isAdmin() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function isShortString(v, min, max) {
+      return v is string && v.size() >= min && v.size() <= max;
+    }
+
+    match /admins/{uid} {
+      allow get: if request.auth != null && request.auth.uid == uid;
+      allow list, write: if false;
+    }
+
+    // Catalogue: everyone can read, only the owner can change it.
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Orders: anyone can place one, only the owner can see or update them
+    // (they hold customers' phone numbers and addresses).
+    match /orders/{orderId} {
+      allow create: if validNewOrder(request.resource.data);
+      allow read, update, delete: if isAdmin();
+    }
+
+    function validNewOrder(d) {
+      return d.keys().hasAll(['customerName', 'phone', 'address', 'city', 'notes', 'paymentMethod', 'items', 'total', 'status', 'paid', 'createdAt'])
+        && d.keys().hasOnly(['customerName', 'phone', 'address', 'city', 'notes', 'paymentMethod', 'items', 'total', 'status', 'paid', 'createdAt'])
+        && isShortString(d.customerName, 1, 80)
+        && d.phone is string && d.phone.matches('^[0-9]{10,15}$')
+        && isShortString(d.address, 1, 300)
+        && isShortString(d.city, 1, 60)
+        && isShortString(d.notes, 0, 500)
+        && d.paymentMethod in ['cod', 'online']
+        && d.items is list && d.items.size() > 0 && d.items.size() <= 50
+        && d.total is number && d.total > 0
+        && d.status == 'pending'
+        && d.paid == false
+        && d.createdAt == request.time;
+    }
+
+    // Purchases: written by the owner when an order is marked delivered.
+    // ID is {hash of customer's phone}_{productId}. Anyone may check whether a
+    // specific ID exists (that's how the review form verifies a purchase), but
+    // nobody except the owner can list them.
+    match /purchases/{purchaseId} {
+      allow get: if true;
+      allow list, write: if isAdmin();
+    }
+
+    // Reviews: public to read. A review can only be created under the ID of an
+    // existing purchase, for that purchase's product, once (no edits).
+    match /reviews/{reviewId} {
+      allow read: if true;
+      allow create: if exists(/databases/$(database)/documents/purchases/$(reviewId))
+        && get(/databases/$(database)/documents/purchases/$(reviewId)).data.productId == request.resource.data.productId
+        && validReview(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    function validReview(d) {
+      return d.keys().hasOnly(['productId', 'productName', 'name', 'rating', 'text', 'createdAt'])
+        && d.keys().hasAll(['productId', 'productName', 'name', 'rating', 'text', 'createdAt'])
+        && d.productId is string
+        && isShortString(d.productName, 1, 120)
+        && isShortString(d.name, 1, 60)
+        && d.rating is int && d.rating >= 1 && d.rating <= 5
+        && isShortString(d.text, 1, 1000)
+        && d.createdAt == request.time;
+    }
+  }
+}
