@@ -1,182 +1,85 @@
+/* Page transition: a soft ivory veil with the logo and a drawn gold hairline. Only used between pages. */
 (function () {
-  var TILE_COLS = 6;
-  var TILE_ROWS = 6;
   var LOGO_SRC = './assets/logo.jpg';
   var FLAG = 'dsPageTransition';
+  var EXIT_MS = 520;
 
-  function prefersReducedMotion() {
+  var css = '' +
+    '.pt-veil{ position:fixed; inset:0; z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:22px;' +
+    ' background:linear-gradient(rgba(255,255,255,0.35), rgba(255,255,255,0.35)), url(./assets/Background/2.png) 0 0 / 420px repeat, #f6efe2; opacity:0; visibility:hidden; pointer-events:none;' +
+    ' transition:opacity .5s cubic-bezier(.4,0,.2,1), visibility 0s linear .5s; }' +
+    '.pt-veil.pt-on{ opacity:1; visibility:visible; pointer-events:all; transition:opacity .5s cubic-bezier(.4,0,.2,1), visibility 0s; }' +
+    '.pt-veil.pt-instant{ transition:none !important; }' +
+    '.pt-veil img{ width:min(340px, 62vw); height:min(340px, 62vw); border-radius:50%; object-fit:cover; box-shadow:0 0 0 1px rgba(182,137,60,.4), 0 18px 60px rgba(182,137,60,.3);' +
+    ' opacity:0; transform:scale(.94); transition:opacity .5s ease .1s, transform .7s cubic-bezier(.2,.8,.2,1) .1s; }' +
+    '.pt-veil.pt-on img{ opacity:1; transform:scale(1); animation:pt-spin 2.4s linear infinite; }' +
+    '@keyframes pt-spin{ to{ transform:rotate(360deg); } }' +
+    '.pt-line{ width:180px; height:1px; background:linear-gradient(90deg, transparent, #b6893c, transparent); transform:scaleX(0); transition:transform .6s cubic-bezier(.65,0,.25,1) .1s; }' +
+    '.pt-veil.pt-on .pt-line{ transform:scaleX(1); }';
+  var style = document.createElement('style');
+  style.textContent = css;
+  document.head.appendChild(style);
+
+  function reduced() {
     return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   }
 
-  function buildOverlay() {
-    var overlay = document.getElementById('ptOverlay');
-    if (overlay) return overlay;
-
-    overlay = document.createElement('div');
-    overlay.className = 'pt-overlay';
-    overlay.id = 'ptOverlay';
-
-    var grid = document.createElement('div');
-    grid.className = 'pt-logo-grid';
-    grid.id = 'ptGrid';
-
-    for (var r = 0; r < TILE_ROWS; r++) {
-      for (var c = 0; c < TILE_COLS; c++) {
-        var tile = document.createElement('div');
-        tile.className = 'pt-tile';
-        var posX = (c / (TILE_COLS - 1)) * 100;
-        var posY = (r / (TILE_ROWS - 1)) * 100;
-        tile.style.backgroundImage = 'url(' + LOGO_SRC + ')';
-        tile.style.backgroundPosition = posX + '% ' + posY + '%';
-        var dx = c - (TILE_COLS - 1) / 2;
-        var dy = r - (TILE_ROWS - 1) / 2;
-        var dist = Math.sqrt(dx * dx + dy * dy) || 1;
-        var mag = 30 + Math.random() * 30;
-        tile.style.setProperty('--tile-out', 'translate(' + ((dx / dist) * mag).toFixed(1) + 'px,' + ((dy / dist) * mag).toFixed(1) + 'px)');
-        tile.style.setProperty('--tile-rot', (Math.random() * 16 - 8).toFixed(1) + 'deg');
-        grid.appendChild(tile);
-      }
-    }
-
-    var sparkleLayer = document.createElement('div');
-    sparkleLayer.className = 'pt-sparkle-layer';
-    sparkleLayer.id = 'ptSparkleLayer';
-
-    overlay.appendChild(grid);
-    overlay.appendChild(sparkleLayer);
-    document.body.appendChild(overlay);
-    return overlay;
+  function buildVeil() {
+    var v = document.getElementById('ptVeil');
+    if (v) return v;
+    v = document.createElement('div');
+    v.className = 'pt-veil';
+    v.id = 'ptVeil';
+    v.innerHTML = '<img src="' + LOGO_SRC + '" alt=""><div class="pt-line"></div>';
+    document.body.appendChild(v);
+    return v;
   }
 
-  function spawnBurstSparkles(count) {
-    var layer = document.getElementById('ptSparkleLayer');
-    if (!layer) return;
-    for (var i = 0; i < count; i++) {
-      var s = document.createElement('div');
-      s.className = 'sparkle sparkle-burst';
-      var angle = Math.random() * Math.PI * 2;
-      var dist = 90 + Math.random() * 220;
-      var size = 6 + Math.random() * 11;
-      s.style.width = size + 'px';
-      s.style.height = size + 'px';
-      s.style.left = '50%';
-      s.style.top = '50%';
-      s.style.setProperty('--tx', (Math.cos(angle) * dist).toFixed(1) + 'px');
-      s.style.setProperty('--ty', (Math.sin(angle) * dist).toFixed(1) + 'px');
-      s.style.animationDelay = Math.floor(Math.random() * 140) + 'ms';
-      layer.appendChild(s);
-      (function (el) { setTimeout(function () { el.remove(); }, 1200); })(s);
-    }
-  }
-
-  function playExit(targetHref) {
-    if (prefersReducedMotion()) {
-      window.location.href = targetHref;
-      return;
-    }
-    var overlay = buildOverlay();
-    var grid = document.getElementById('ptGrid');
-    grid.classList.remove('pt-burst', 'pt-zoom');
-    void grid.offsetWidth;
-    overlay.classList.add('pt-show');
-
-    requestAnimationFrame(function () {
-      grid.classList.add('pt-burst');
-      spawnBurstSparkles(24);
-    });
-
-    setTimeout(function () {
-      grid.classList.add('pt-zoom');
-      spawnBurstSparkles(18);
-    }, 380);
-
+  function playExit(href) {
+    if (reduced()) { window.location.href = href; return; }
+    var v = buildVeil();
+    void v.offsetWidth;
+    v.classList.add('pt-on');
     setTimeout(function () {
       try { sessionStorage.setItem(FLAG, '1'); } catch (e) {}
-      window.location.href = targetHref;
-    }, 950);
+      window.location.href = href;
+    }, EXIT_MS + 160);
   }
 
-  var inPageBusy = false;
-
-  function playInPage(callback) {
-    if (prefersReducedMotion() || inPageBusy) {
-      if (typeof callback === 'function') callback();
-      return;
-    }
-    inPageBusy = true;
-
-    var overlay = buildOverlay();
-    var grid = document.getElementById('ptGrid');
-    grid.style.display = '';
-    grid.classList.remove('pt-burst', 'pt-zoom');
-    void grid.offsetWidth;
-    overlay.classList.remove('pt-enter-open');
-    overlay.classList.add('pt-show');
-
-    requestAnimationFrame(function () {
-      grid.classList.add('pt-burst');
-      spawnBurstSparkles(20);
-    });
-
-    setTimeout(function () {
-      grid.classList.add('pt-zoom');
-      spawnBurstSparkles(14);
-    }, 380);
-
-    setTimeout(function () {
-      if (typeof callback === 'function') callback();
-      grid.style.display = 'none';
-      spawnBurstSparkles(26);
-      overlay.classList.add('pt-enter-open');
-      setTimeout(function () {
-        overlay.classList.remove('pt-show', 'pt-enter-open');
-        grid.style.display = '';
-        grid.classList.remove('pt-burst', 'pt-zoom');
-        inPageBusy = false;
-      }, 700);
-    }, 950);
-  }
-
+  // Called right after <body> opens: if we arrived via a transition, start covered.
   function earlyEnterCheck() {
-    var hasFlag = false;
-    try { hasFlag = sessionStorage.getItem(FLAG) === '1'; } catch (e) {}
-    if (!hasFlag || prefersReducedMotion()) {
+    var has = false;
+    try { has = sessionStorage.getItem(FLAG) === '1'; } catch (e) {}
+    if (!has || reduced()) {
       try { sessionStorage.removeItem(FLAG); } catch (e) {}
       return;
     }
-    var overlay = buildOverlay();
-    document.getElementById('ptGrid').style.display = 'none';
-    overlay.classList.add('pt-show');
+    var v = buildVeil();
+    v.classList.add('pt-instant', 'pt-on');
   }
 
   function completeEnterAnimation() {
-    var hasFlag = false;
-    try { hasFlag = sessionStorage.getItem(FLAG) === '1'; } catch (e) {}
-    if (!hasFlag) return;
+    var has = false;
+    try { has = sessionStorage.getItem(FLAG) === '1'; } catch (e) {}
+    if (!has) return;
     try { sessionStorage.removeItem(FLAG); } catch (e) {}
-
-    var overlay = document.getElementById('ptOverlay');
-    if (!overlay) return;
+    var v = document.getElementById('ptVeil');
+    if (!v) return;
 
     if (window.location.hash) {
       var target = document.getElementById(window.location.hash.slice(1));
       if (target) {
-        var prevBehavior = document.documentElement.style.scrollBehavior;
+        var prev = document.documentElement.style.scrollBehavior;
         document.documentElement.style.scrollBehavior = 'auto';
         target.scrollIntoView(true);
-        document.documentElement.style.scrollBehavior = prevBehavior;
+        document.documentElement.style.scrollBehavior = prev;
       }
     }
-
     setTimeout(function () {
-      spawnBurstSparkles(30);
-      overlay.classList.add('pt-enter-open');
-      setTimeout(function () {
-        overlay.classList.remove('pt-show', 'pt-enter-open');
-        var grid = document.getElementById('ptGrid');
-        if (grid) grid.style.display = '';
-      }, 700);
-    }, 200);
+      void v.offsetWidth;
+      v.classList.remove('pt-instant');
+      v.classList.remove('pt-on');
+    }, 250);
   }
 
   function initLinks() {
@@ -190,40 +93,28 @@
     }
   }
 
+  // In-page anchors: plain smooth scroll (the nav indicator slides along); no veil.
   function initAnchorLinks() {
     var links = document.querySelectorAll('a[href^="#"]');
     for (var i = 0; i < links.length; i++) {
-      var href = links[i].getAttribute('href');
-      if (!href || href.length < 2) continue;
       links[i].addEventListener('click', function (e) {
         if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button === 1) return;
-        var targetEl = document.getElementById(this.getAttribute('href').slice(1));
-        if (!targetEl) return;
+        var id = (this.getAttribute('href') || '').slice(1);
+        var el = id && document.getElementById(id);
+        if (!el) return;
         e.preventDefault();
-        playInPage(function () {
-          var prevBehavior = document.documentElement.style.scrollBehavior;
-          document.documentElement.style.scrollBehavior = 'auto';
-          targetEl.scrollIntoView(true);
-          document.documentElement.style.scrollBehavior = prevBehavior;
-        });
+        el.scrollIntoView({ behavior: reduced() ? 'auto' : 'smooth', block: 'start' });
+        try { history.replaceState(null, '', '#' + id); } catch (err) {}
       });
     }
   }
 
-  // Going Back/Forward restores the page exactly as it was left — mid exit-animation,
-  // with the overlay covering everything. Clear it whenever a page comes back from that cache.
+  // Back/Forward cache can restore a page with the veil still covering it.
   window.addEventListener('pageshow', function (e) {
     if (!e.persisted) return;
     try { sessionStorage.removeItem(FLAG); } catch (err) {}
-    inPageBusy = false;
-    var overlay = document.getElementById('ptOverlay');
-    if (!overlay) return;
-    overlay.classList.remove('pt-show', 'pt-enter-open');
-    var grid = document.getElementById('ptGrid');
-    if (grid) {
-      grid.classList.remove('pt-burst', 'pt-zoom');
-      grid.style.display = '';
-    }
+    var v = document.getElementById('ptVeil');
+    if (v) v.classList.remove('pt-on', 'pt-instant');
   });
 
   window.__pt = {
@@ -231,6 +122,6 @@
     completeEnterAnimation: completeEnterAnimation,
     initLinks: initLinks,
     initAnchorLinks: initAnchorLinks,
-    playInPage: playInPage
+    playInPage: function (cb) { if (typeof cb === 'function') cb(); }
   };
 })();

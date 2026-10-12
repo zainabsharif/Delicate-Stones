@@ -184,68 +184,9 @@ nav.wrap{
   }
   .wa-float:hover{ transform:scale(1.08); filter:brightness(0.85);}
 
-  /* ---------- Custom cursor + sparkle trail ---------- */
-  body.custom-cursor-active, body.custom-cursor-active *{ cursor:none !important; }
-  .cursor-gem{
-    position:fixed; top:0; left:0; width:18px; height:18px; pointer-events:none; z-index:9999;
-    background:linear-gradient(135deg, var(--gold-light), var(--gold));
-    clip-path:polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
-    box-shadow:0 0 10px rgba(182,137,60,0.55);
-    opacity:0; transition:opacity 0.25s ease, filter 0.15s ease;
-  }
-  .cursor-gem.active{ opacity:1; }
-  .cursor-gem.pressed{ filter:brightness(0.85); }
-  .sparkle{
-    position:fixed; top:0; left:0; pointer-events:none; z-index:9998;
-    background:radial-gradient(circle, #fff2d2 0%, var(--gold) 42%, var(--ink-dark) 78%, transparent 85%);
-    clip-path:polygon(50% 0%, 61% 39%, 100% 50%, 61% 61%, 50% 100%, 39% 61%, 0% 50%, 39% 39%);
-    filter:drop-shadow(0 0 6px rgba(182,137,60,0.85)) drop-shadow(0 0 2px rgba(15,12,7,0.6));
-    animation:sparkle-pop 800ms ease-out forwards;
-  }
-  @keyframes sparkle-pop{
-    0%{ opacity:1; transform:translate(-50%,-50%) scale(0.35) rotate(0deg); }
-    50%{ opacity:1; transform:translate(-50%,-50%) scale(1.15) rotate(55deg); }
-    100%{ opacity:0; transform:translate(-50%,-50%) scale(1.4) rotate(95deg) translateY(-20px); }
-  }
-
-  /* ---------- Page transition (logo grid zoom) ---------- */
-  .pt-overlay{
-    position:fixed; inset:0; z-index:99999; display:none;
-    align-items:center; justify-content:center;
-    background:radial-gradient(circle at center, var(--ivory-soft) 0%, var(--ivory) 72%);
-    overflow:hidden; opacity:1; transform:scale(1);
-    transition:opacity 0.5s ease, transform 0.6s cubic-bezier(.5,0,.75,1);
-  }
-  .pt-overlay.pt-show{ display:flex; }
-  .pt-overlay.pt-enter-open{ opacity:0; transform:scale(1.15); }
-  .pt-logo-grid{
-    position:relative; width:260px; height:260px; border-radius:50%; overflow:hidden;
-    display:grid; grid-template-columns:repeat(6,1fr); grid-template-rows:repeat(6,1fr);
-    box-shadow:0 0 70px rgba(182,137,60,0.4);
-    transition:transform 0.55s cubic-bezier(.5,0,.75,1), opacity 0.5s ease 0.1s;
-  }
-  .pt-tile{
-    background-size:600% 600%;
-    transform:translate(0,0) scale(1) rotate(0deg);
-    opacity:1;
-    transition:transform 0.5s cubic-bezier(.3,.75,.4,1), opacity 0.5s ease;
-  }
-  .pt-logo-grid.pt-burst .pt-tile{
-    transform:var(--tile-out) scale(0.88) rotate(var(--tile-rot,0deg));
-  }
-  .pt-logo-grid.pt-zoom{ transform:scale(15); opacity:0; }
-  .pt-sparkle-layer{ position:absolute; inset:0; pointer-events:none; }
-  .sparkle-burst{
-    position:absolute; left:50%; top:50%;
-    animation:sparkle-burst-pop 950ms ease-out forwards;
-  }
-  @keyframes sparkle-burst-pop{
-    0%{ opacity:0; transform:translate(-50%,-50%) scale(0.25) rotate(0deg); }
-    28%{ opacity:1; transform:translate(-50%,-50%) scale(1.1) rotate(30deg); }
-    100%{ opacity:0; transform:translate(calc(-50% + var(--tx)), calc(-50% + var(--ty))) scale(0.5) rotate(140deg); }
-  }
 </style>
 <link rel="stylesheet" href="./assets/css/shop.css">
+<script src="./assets/elegant.js" defer></script>
 </head>
 <body>
 <script>if (window.__pt) { window.__pt.earlyEnterCheck(); }</script>
@@ -351,64 +292,6 @@ nav.wrap{
   }
   makeBeads('beadsA', 26);
   makeBeads('beadsB', 26);
-
-  // ---- Custom gem cursor with a trailing sparkle trail ----
-  (function(){
-    const finePointer = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
-    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (!finePointer || reduceMotion) return;
-
-    document.body.classList.add('custom-cursor-active');
-
-    const gem = document.createElement('div');
-    gem.className = 'cursor-gem';
-    document.body.appendChild(gem);
-
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let gemX = mouseX;
-    let gemY = mouseY;
-    let pressed = false;
-    let lastSparkle = 0;
-
-    function spawnSparkle(x, y){
-      const s = document.createElement('div');
-      s.className = 'sparkle';
-      const size = 8 + Math.random() * 8;
-      s.style.width = size + 'px';
-      s.style.height = size + 'px';
-      s.style.left = (x + (Math.random() - 0.5) * 14) + 'px';
-      s.style.top = (y + (Math.random() - 0.5) * 14) + 'px';
-      document.body.appendChild(s);
-      s.addEventListener('animationend', () => s.remove());
-      setTimeout(() => { if (s.isConnected) s.remove(); }, 1000);
-    }
-
-    window.addEventListener('mousemove', (e) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-      gem.classList.add('active');
-      const now = performance.now();
-      if (now - lastSparkle > 25){
-        lastSparkle = now;
-        spawnSparkle(mouseX, mouseY);
-      }
-    });
-
-    window.addEventListener('mousedown', () => { pressed = true; });
-    window.addEventListener('mouseup', () => { pressed = false; });
-    document.addEventListener('mouseleave', () => gem.classList.remove('active'));
-
-    function loop(){
-      gemX += (mouseX - gemX) * 0.25;
-      gemY += (mouseY - gemY) * 0.25;
-      const scale = pressed ? 0.8 : 1;
-      gem.style.transform = 'translate3d(' + gemX + 'px,' + gemY + 'px,0) translate(-50%,-50%) scale(' + scale + ')';
-      gem.classList.toggle('pressed', pressed);
-      requestAnimationFrame(loop);
-    }
-    requestAnimationFrame(loop);
-  })();
 
   if (window.__pt) {
     window.__pt.initLinks();
