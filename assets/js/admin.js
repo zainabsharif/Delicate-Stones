@@ -193,6 +193,7 @@ function renderDashboard() {
             <label>Price (Rs.)<input name="price" type="number" min="0" step="1" placeholder="e.g. 1200"></label>
           </div>
           <label id="subField" hidden>Type<select name="subcategory"></select></label>
+          <label id="piecesField" hidden>Number of pieces<input name="pieces" type="number" min="1" step="1" placeholder="e.g. 3"></label>
           <label>Description<textarea name="description" rows="4" maxlength="1000"></textarea></label>
           <label>Photo<input name="photo" type="file" accept="image/*"></label>
           <label>…or image path / URL<input name="imageUrl" placeholder="./assets/Items/Bracelets/…jpeg"></label>
@@ -239,6 +240,7 @@ function renderDashboard() {
   const list = document.getElementById('prodList');
   list.addEventListener('click', onProductAction);
   list.addEventListener('change', onPriceChange);
+  list.addEventListener('change', onPiecesChange);
   list.addEventListener('change', onSubChange);
   list.addEventListener('change', onCatChange);
   list.addEventListener('focusout', () => {
@@ -456,7 +458,7 @@ function rowHtml(p) {
       <img src="${escapeHtml(p.image)}" alt="">
       <div>
         <div class="prod-name">${escapeHtml(p.name)}</div>
-        <div class="prod-cat">${catSelectHtml(p)}${SUBCATEGORIES[p.category] ? subSelectHtml(p) : ''}${p.visible === false ? ' · hidden' : ''}</div>
+        <div class="prod-cat">${catSelectHtml(p)}${SUBCATEGORIES[p.category] ? subSelectHtml(p) : ''}${p.subcategory === 'grouped' ? piecesHtml(p) : ''}${p.visible === false ? ' · hidden' : ''}</div>
       </div>
       <label class="price-edit">Rs.
         <input type="number" min="0" step="1" data-price="${escapeHtml(p.id)}" value="${p.price > 0 ? p.price : ''}" class="${p.price > 0 ? '' : 'need'}" aria-label="Price for ${escapeHtml(p.name)}">
@@ -467,6 +469,25 @@ function rowHtml(p) {
         <button type="button" class="btn btn-danger" data-delete="${escapeHtml(p.id)}">Delete</button>
       </div>
     </div>`;
+}
+
+function piecesHtml(p) {
+  const ok = Number(p.pieces) > 0;
+  return `<label class="pieces-edit"><input type="number" min="1" step="1" data-pieces="${escapeHtml(p.id)}" value="${ok ? p.pieces : ''}" class="${ok ? '' : 'need'}" aria-label="Number of pieces: ${escapeHtml(p.name)}"> pieces</label>`;
+}
+
+async function onPiecesChange(e) {
+  const input = e.target.closest('[data-pieces]');
+  if (!input) return;
+  const n = Math.round(Number(input.value));
+  const pieces = input.value !== '' && Number.isFinite(n) && n > 0 ? n : null;
+  input.classList.toggle('need', !pieces);
+  try {
+    await updateDoc(doc(db, 'products', input.dataset.pieces), { pieces });
+  } catch (err) {
+    console.error(err);
+    alert('Could not be saved: ' + (err.code || err.message));
+  }
 }
 
 function subOptions(category, selected) {
@@ -628,6 +649,7 @@ function setupProductForm() {
   });
   document.getElementById('prodCancel').addEventListener('click', resetProductForm);
   form.category.addEventListener('change', () => syncSubField(form, form.subcategory.value));
+  form.subcategory.addEventListener('change', () => syncPiecesField(form));
   syncSubField(form, '');
 
   form.addEventListener('submit', async (e) => {
@@ -638,6 +660,7 @@ function setupProductForm() {
       category: form.category.value,
       subcategory: hasSubs ? (form.subcategory.value || null) : null,
       price: parsePrice(form.price.value),
+      pieces: hasSubs && form.subcategory.value === 'grouped' ? parsePieces(form.pieces.value) : null,
       description: form.description.value.trim(),
       image: state.formImage,
       visible: form.visible.checked,
@@ -670,6 +693,16 @@ function syncSubField(form, selected) {
   const subs = SUBCATEGORIES[form.category.value];
   document.getElementById('subField').hidden = !subs;
   form.subcategory.innerHTML = subs ? subOptions(form.category.value, selected) : '';
+  syncPiecesField(form);
+}
+
+function syncPiecesField(form) {
+  document.getElementById('piecesField').hidden = !(SUBCATEGORIES[form.category.value] && form.subcategory.value === 'grouped');
+}
+
+function parsePieces(value) {
+  const n = Math.round(Number(value));
+  return value !== '' && Number.isFinite(n) && n > 0 ? n : null;
 }
 
 function showProdError(msg) {
@@ -686,6 +719,7 @@ function startEditing(p) {
   form.category.value = p.category || 'bracelet';
   syncSubField(form, p.subcategory);
   form.price.value = p.price > 0 ? p.price : '';
+  form.pieces.value = p.pieces > 0 ? p.pieces : '';
   form.description.value = p.description || '';
   form.photo.value = '';
   form.imageUrl.value = state.formImage.startsWith('data:') ? '' : state.formImage;

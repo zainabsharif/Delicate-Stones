@@ -1,6 +1,6 @@
 // ---- Collections page: product grid, category filter, reviews ----
 import {
-  isConfigured, SUBCATEGORIES, categoryLabel, loadProducts, loadAllReviews, reviewStats, hasPrice,
+  isConfigured, SUBCATEGORIES, categoryLabel, pieceCount, loadProducts, loadAllReviews, reviewStats, hasPrice,
   formatPrice, escapeHtml, stars, waLink, formatDate, normalizePhone, isValidPhone,
   checkReviewEligibility, submitReview,
 } from './store.js';
@@ -61,6 +61,7 @@ function cardHtml(p) {
       <div class="card-body">
         <div class="eyebrow">${escapeHtml(categoryLabel(p))}</div>
         <h3>${escapeHtml(p.name)}</h3>
+        ${pieceCount(p) ? `<div class="piece-count">${pieceCount(p)} pieces</div>` : ''}
         ${ratingHtml(p)}
         <p class="desc">${escapeHtml(p.description)}</p>
         <div class="card-foot">
