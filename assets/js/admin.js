@@ -22,6 +22,7 @@ const state = {
   editingId: null,
   formImage: '',
   search: '',
+  openSections: new Set(),
 };
 let unsubscribers = [];
 let productListDirty = false;
@@ -235,6 +236,11 @@ function renderDashboard() {
   setupProductForm();
   const list = document.getElementById('prodList');
   list.addEventListener('click', onProductAction);
+  list.addEventListener('toggle', (e) => {
+    const d = e.target;
+    if (state.search || !d.dataset || !d.dataset.section) return;
+    if (d.open) state.openSections.add(d.dataset.section); else state.openSections.delete(d.dataset.section);
+  }, true);
   list.addEventListener('change', onPriceChange);
   list.addEventListener('change', onSubChange);
   list.addEventListener('change', onCatChange);
@@ -408,7 +414,44 @@ function renderProducts() {
 
   const q = state.search;
   const shown = q ? all.filter((p) => (p.name + ' ' + categoryLabel(p)).toLowerCase().includes(q)) : all;
-  list.innerHTML = shown.length ? shown.map((p) => `
+  if (!all.length) { list.innerHTML = '<p class="empty">No products yet.</p>'; return; }
+
+  const sections = [];
+  for (const [cat, label] of Object.entries(CATEGORIES)) {
+    const inCat = shown.filter((p) => p.category === cat);
+    const subs = SUBCATEGORIES[cat];
+    if (!subs) {
+      sections.push({ key: cat, title: label, cat, sub: '', items: inCat });
+      continue;
+    }
+    const children = Object.entries(subs).map(([sk, sl]) => ({
+      key: `${cat}:${sk}`, title: sl, cat, sub: sk, items: inCat.filter((p) => p.subcategory === sk),
+    }));
+    const loose = inCat.filter((p) => !subs[p.subcategory]);
+    if (loose.length) children.push({ key: `${cat}:`, title: 'Not sorted yet', cat, sub: '', items: loose, loose: true });
+    sections.push({ key: cat, title: label, cat, sub: '', items: inCat, children });
+  }
+  const vis = sections.filter((sec) => !q || sec.items.length);
+  list.innerHTML = vis.length ? vis.map((sec) => sectionHtml(sec, Boolean(q))).join('')
+    : '<p class="empty">No pieces match that search.</p>';
+}
+
+function sectionHtml(sec, searching) {
+  const open = searching || state.openSections.has(sec.key);
+  const add = sec.loose ? '' :
+    `<button type="button" class="btn btn-ghost sec-add" data-add-cat="${sec.cat}" data-add-sub="${sec.sub}">+ Add here</button>`;
+  const body = sec.children
+    ? sec.children.filter((c) => !searching || c.items.length).map((c) => sectionHtml(c, searching)).join('')
+    : (sec.items.length ? sec.items.map(rowHtml).join('') : '<p class="sec-empty">Nothing here yet — use “Add here”.</p>');
+  return `
+    <details class="prod-section ${sec.children ? 'top' : ''}" data-section="${escapeHtml(sec.key)}" ${open ? 'open' : ''}>
+      <summary><span class="sec-title">${escapeHtml(sec.title)}</span><span class="sec-count">${sec.items.length}</span>${add}</summary>
+      <div class="sec-body">${body}</div>
+    </details>`;
+}
+
+function rowHtml(p) {
+  return `
     <div class="prod-row ${p.visible === false ? 'hidden-prod' : ''}">
       <img src="${escapeHtml(p.image)}" alt="">
       <div>
@@ -423,7 +466,7 @@ function renderProducts() {
         <button type="button" class="btn btn-ghost" data-toggle="${escapeHtml(p.id)}">${p.visible === false ? 'Show' : 'Hide'}</button>
         <button type="button" class="btn btn-danger" data-delete="${escapeHtml(p.id)}">Delete</button>
       </div>
-    </div>`).join('') : `<p class="empty">${all.length ? 'No pieces match that search.' : 'No products yet.'}</p>`;
+    </div>`;
 }
 
 function subOptions(category, selected) {
@@ -518,9 +561,23 @@ async function onPriceChange(e) {
   }
 }
 
+function addToSection(cat, sub) {
+  resetProductForm();
+  const form = document.getElementById('prodForm');
+  form.category.value = cat;
+  syncSubField(form, sub);
+  form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  form.elements.name.focus({ preventScroll: true });
+}
+
 async function onProductAction(e) {
   const b = e.target.closest('button');
   if (!b) return;
+  if (b.dataset.addCat) {
+    e.preventDefault(); // don't toggle the section
+    addToSection(b.dataset.addCat, b.dataset.addSub);
+    return;
+  }
   const id = b.dataset.edit || b.dataset.toggle || b.dataset.delete;
   const p = state.products.find((x) => x.id === id);
   if (!p) return;
