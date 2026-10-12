@@ -22,7 +22,8 @@ const state = {
   editingId: null,
   formImage: '',
   search: '',
-  openSections: new Set(),
+  catFilter: 'all',
+  subFilter: 'all',
 };
 let unsubscribers = [];
 let productListDirty = false;
@@ -207,6 +208,7 @@ function renderDashboard() {
             <span id="prodCount"></span>
             <input type="search" id="prodSearch" placeholder="Search pieces…" aria-label="Search pieces">
           </div>
+          <div class="chips" id="prodChips"></div>
           <div class="prod-list" id="prodList"><p class="empty">Loading products…</p></div>
         </div>
       </div>
@@ -236,11 +238,6 @@ function renderDashboard() {
   setupProductForm();
   const list = document.getElementById('prodList');
   list.addEventListener('click', onProductAction);
-  list.addEventListener('toggle', (e) => {
-    const d = e.target;
-    if (state.search || !d.dataset || !d.dataset.section) return;
-    if (d.open) state.openSections.add(d.dataset.section); else state.openSections.delete(d.dataset.section);
-  }, true);
   list.addEventListener('change', onPriceChange);
   list.addEventListener('change', onSubChange);
   list.addEventListener('change', onCatChange);
@@ -248,6 +245,14 @@ function renderDashboard() {
     setTimeout(() => {
       if (productListDirty && !list.contains(document.activeElement)) renderProducts();
     }, 0);
+  });
+  document.getElementById('prodChips').addEventListener('click', (e) => {
+    const c = e.target.closest('[data-cat-filter]');
+    const sf = e.target.closest('[data-sub-filter]');
+    if (c) { state.catFilter = c.dataset.catFilter; state.subFilter = 'all'; }
+    else if (sf) state.subFilter = sf.dataset.subFilter;
+    else return;
+    renderProducts();
   });
   document.getElementById('prodSearch').addEventListener('input', (e) => {
     state.search = e.target.value.trim().toLowerCase();
@@ -413,41 +418,36 @@ function renderProducts() {
   if (importBtn) importBtn.onclick = importSeed;
 
   const q = state.search;
-  const shown = q ? all.filter((p) => (p.name + ' ' + categoryLabel(p)).toLowerCase().includes(q)) : all;
-  if (!all.length) { list.innerHTML = '<p class="empty">No products yet.</p>'; return; }
+  const cat = state.catFilter;
+  const sub = SUBCATEGORIES[cat] ? state.subFilter : 'all';
 
-  const sections = [];
-  for (const [cat, label] of Object.entries(CATEGORIES)) {
-    const inCat = shown.filter((p) => p.category === cat);
-    const subs = SUBCATEGORIES[cat];
-    if (!subs) {
-      sections.push({ key: cat, title: label, cat, sub: '', items: inCat });
-      continue;
-    }
-    const children = Object.entries(subs).map(([sk, sl]) => ({
-      key: `${cat}:${sk}`, title: sl, cat, sub: sk, items: inCat.filter((p) => p.subcategory === sk),
-    }));
-    const loose = inCat.filter((p) => !subs[p.subcategory]);
-    if (loose.length) children.push({ key: `${cat}:`, title: 'Not sorted yet', cat, sub: '', items: loose, loose: true });
-    sections.push({ key: cat, title: label, cat, sub: '', items: inCat, children });
+  const count = (fn) => all.filter(fn).length;
+  const chip = (attr, val, label, n, on) =>
+    `<button type="button" ${attr}="${val}" class="${on ? 'active' : ''}">${escapeHtml(label)} (${n})</button>`;
+  let chips = chip('data-cat-filter', 'all', 'All', all.length, cat === 'all') +
+    Object.entries(CATEGORIES).map(([k, v]) => chip('data-cat-filter', k, v, count((p) => p.category === k), cat === k)).join('');
+  if (SUBCATEGORIES[cat]) {
+    chips += '<span class="chip-break"></span>' +
+      chip('data-sub-filter', 'all', 'All ' + CATEGORIES[cat], count((p) => p.category === cat), sub === 'all') +
+      Object.entries(SUBCATEGORIES[cat]).map(([k, v]) =>
+        chip('data-sub-filter', k, v, count((p) => p.category === cat && p.subcategory === k), sub === k)).join('');
   }
-  const vis = sections.filter((sec) => !q || sec.items.length);
-  list.innerHTML = vis.length ? vis.map((sec) => sectionHtml(sec, Boolean(q))).join('')
-    : '<p class="empty">No pieces match that search.</p>';
-}
+  document.getElementById('prodChips').innerHTML = chips;
 
-function sectionHtml(sec, searching) {
-  const open = searching || state.openSections.has(sec.key);
-  const add = sec.loose ? '' :
-    `<button type="button" class="btn btn-ghost sec-add" data-add-cat="${sec.cat}" data-add-sub="${sec.sub}">+ Add here</button>`;
-  const body = sec.children
-    ? sec.children.filter((c) => !searching || c.items.length).map((c) => sectionHtml(c, searching)).join('')
-    : (sec.items.length ? sec.items.map(rowHtml).join('') : '<p class="sec-empty">Nothing here yet — use “Add here”.</p>');
-  return `
-    <details class="prod-section ${sec.children ? 'top' : ''}" data-section="${escapeHtml(sec.key)}" ${open ? 'open' : ''}>
-      <summary><span class="sec-title">${escapeHtml(sec.title)}</span><span class="sec-count">${sec.items.length}</span>${add}</summary>
-      <div class="sec-body">${body}</div>
-    </details>`;
+  const shown = all.filter((p) =>
+    (cat === 'all' || p.category === cat) &&
+    (sub === 'all' || p.subcategory === sub) &&
+    (!q || (p.name + ' ' + categoryLabel(p)).toLowerCase().includes(q)));
+
+  const where = cat === 'all' ? ''
+    : (sub !== 'all' ? SUBCATEGORIES[cat][sub] : CATEGORIES[cat]);
+  const addBar = cat === 'all' ? '' : `
+    <div class="add-bar">
+      <button type="button" class="btn btn-solid" data-add-cat="${cat}" data-add-sub="${sub === 'all' ? '' : sub}">+ Add a piece to ${escapeHtml(where)}</button>
+    </div>`;
+
+  list.innerHTML = addBar + (shown.length ? shown.map(rowHtml).join('')
+    : `<p class="empty">${all.length ? 'Nothing here yet.' : 'No products yet.'}</p>`);
 }
 
 function rowHtml(p) {
