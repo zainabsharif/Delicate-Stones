@@ -67,6 +67,25 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
 
+    // Feedback: anyone can leave a note on a piece, but it is saved as unapproved
+    // and is only readable by the public once the owner approves it.
+    match /feedback/{feedbackId} {
+      allow read: if resource.data.approved == true || isAdmin();
+      allow create: if validFeedback(request.resource.data);
+      allow update, delete: if isAdmin();
+    }
+
+    function validFeedback(d) {
+      return d.keys().hasOnly(['productId', 'productName', 'name', 'text', 'approved', 'createdAt'])
+        && d.keys().hasAll(['productId', 'productName', 'name', 'text', 'approved', 'createdAt'])
+        && d.productId is string && d.productId.size() <= 100
+        && isShortString(d.productName, 1, 120)
+        && isShortString(d.name, 1, 60)
+        && isShortString(d.text, 1, 600)
+        && d.approved == false
+        && d.createdAt == request.time;
+    }
+
     function validReview(d) {
       return d.keys().hasOnly(['productId', 'productName', 'name', 'rating', 'text', 'createdAt'])
         && d.keys().hasAll(['productId', 'productName', 'name', 'rating', 'text', 'createdAt'])

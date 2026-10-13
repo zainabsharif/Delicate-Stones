@@ -1,8 +1,8 @@
 // ---- Collections page: product grid, category filter, reviews ----
 import {
-  isConfigured, SUBCATEGORIES, categoryLabel, loadProducts, loadAllReviews, reviewStats, hasPrice,
+  isConfigured, SUBCATEGORIES, categoryLabel, loadProducts, peekCachedProducts, loadAllReviews, reviewStats, hasPrice,
   formatPrice, escapeHtml, stars, waLink, formatDate, normalizePhone, isValidPhone,
-  checkReviewEligibility, submitReview,
+  checkReviewEligibility, submitReview, submitFeedback, loadApprovedFeedback,
 } from './store.js';
 import { initCart, addAndNotify, savedCustomer } from './cart-ui.js';
 
@@ -10,41 +10,67 @@ const grid = document.querySelector('#collection .grid-4');
 const buttons = document.querySelectorAll('.category-list button');
 let products = [];
 let stats = new Map();
+let feedback = new Map();
 let currentCategory = 'all';
 let currentSub = 'all';
 
 initCart();
 init();
 
+let socialLoaded = false;
+
 async function init() {
-  grid.innerHTML = '<p class="ds-loading">Loading the collection…</p>';
+  // Start every request at once instead of one after another.
+  const social = isConfigured
+    ? Promise.all([
+        loadAllReviews().then(reviewStats).catch((err) => { console.error('Reviews failed to load', err); return new Map(); }),
+        loadApprovedFeedback().catch((err) => { console.error('Feedback failed to load', err); return new Map(); }),
+      ])
+    : null;
+
+  // Show last visit's catalogue straight away while the fresh one loads.
+  const cached = peekCachedProducts();
+  if (cached) {
+    products = cached;
+    renderGrid();
+    setupFilter();
+  } else {
+    grid.innerHTML = '<div class="ds-wave" role="status" aria-label="Loading the collection"><span></span><span></span><span></span><span></span><span></span></div>';
+  }
+
   try {
     products = await loadProducts();
   } catch (err) {
     console.error(err);
-    grid.innerHTML = `<p class="ds-loading">The collection couldn't load right now. Please refresh, or <a href="${escapeHtml(waLink('Hi Daniya! I have a question.'))}" target="_blank" rel="noopener">message Daniya on WhatsApp</a>.</p>`;
+    if (!cached) {
+      grid.innerHTML = `<p class="ds-loading">The collection couldn't load right now. Please refresh, or <a href="${escapeHtml(waLink('Hi Daniya! I have a question.'))}" target="_blank" rel="noopener">message Daniya on WhatsApp</a>.</p>`;
+    }
     return;
   }
   renderGrid();
-  setupFilter();
-  if (isConfigured) {
-    try {
-      stats = reviewStats(await loadAllReviews());
-      renderGrid();
-    } catch (err) {
-      console.error('Reviews failed to load', err);
-    }
+  if (!cached) setupFilter();
+
+  if (social) {
+    [stats, feedback] = await social;
+    socialLoaded = true;
+    renderGrid();
   }
 }
 
 function ratingHtml(p) {
-  if (!isConfigured) return '';
+  if (!isConfigured || !socialLoaded) return '';
   const s = stats.get(p.id);
-  if (!s) return `<button type="button" class="rating-link muted" data-reviews="${escapeHtml(p.id)}">No reviews yet</button>`;
+  if (!s) return '';
   const avg = s.sum / s.count;
   return `<button type="button" class="rating-link" data-reviews="${escapeHtml(p.id)}">
     <span class="rating-stars">${stars(avg)}</span> ${avg.toFixed(1)} · ${s.count} review${s.count === 1 ? '' : 's'}
   </button>`;
+}
+
+function feedbackHtml(p) {
+  if (!isConfigured || !socialLoaded) return '';
+  const n = (feedback.get(p.id) || []).length;
+  return `<button type="button" class="feedback-link" data-feedback="${escapeHtml(p.id)}">${n ? `Customer reviews (${n})` : 'Add review'}</button>`;
 }
 
 function cardHtml(p) {
@@ -57,7 +83,7 @@ function cardHtml(p) {
     : (isConfigured ? '<div class="price muted">Price on request</div>' : '');
   return `
     <div class="card" data-category="${escapeHtml(p.category)}" data-sub="${escapeHtml(p.subcategory || '')}">
-      <div class="card-art"><img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy"></div>
+      <div class="card-art"><img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async"></div>
       <div class="card-body">
         <div class="eyebrow">${escapeHtml(categoryLabel(p))}</div>
         <h3>${escapeHtml(p.name)}</h3>
@@ -70,6 +96,7 @@ function cardHtml(p) {
             <a class="ask" href="${escapeHtml(ask)}" target="_blank" rel="noopener">Ask about this piece</a>
           </div>
         </div>
+        ${feedbackHtml(p)}
       </div>
     </div>`;
 }
@@ -89,7 +116,9 @@ grid.addEventListener('click', (e) => {
     return;
   }
   const rev = e.target.closest('[data-reviews]');
-  if (rev) openReviews(rev.dataset.reviews);
+  if (rev) { openReviews(rev.dataset.reviews); return; }
+  const fb = e.target.closest('[data-feedback]');
+  if (fb) openFeedback(fb.dataset.feedback);
 });
 
 // ---------- Category + sub-category filter ----------
@@ -265,4 +294,87 @@ modalBody.addEventListener('submit', async (e) => {
   }
   submit.disabled = false;
   submit.textContent = 'Submit review';
+});
+
+// ---------- Feedback modal ----------
+document.body.insertAdjacentHTML('beforeend', `
+  <div class="ds-backdrop" id="feedbackBackdrop" hidden></div>
+  <div class="ds-modal" id="feedbackModal" role="dialog" aria-modal="true" aria-labelledby="feedbackTitle" hidden>
+    <div class="ds-drawer-head">
+      <h3 id="feedbackTitle">Reviews</h3>
+      <button type="button" class="ds-close" aria-label="Close feedback">&times;</button>
+    </div>
+    <div class="ds-drawer-body" id="feedbackBody"></div>
+  </div>
+`);
+const fbModal = document.getElementById('feedbackModal');
+const fbBody = document.getElementById('feedbackBody');
+const fbBackdrop = document.getElementById('feedbackBackdrop');
+let fbProduct = null;
+
+function closeFeedback() {
+  fbModal.hidden = true;
+  fbBackdrop.hidden = true;
+  document.body.classList.remove('ds-lock');
+}
+fbModal.querySelector('.ds-close').addEventListener('click', closeFeedback);
+fbBackdrop.addEventListener('click', closeFeedback);
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !fbModal.hidden) closeFeedback(); });
+
+function openFeedback(productId) {
+  fbProduct = products.find((p) => p.id === productId);
+  if (!fbProduct) return;
+  renderFeedback();
+  fbModal.hidden = false;
+  fbBackdrop.hidden = false;
+  document.body.classList.add('ds-lock');
+}
+
+function renderFeedback(thanks = false) {
+  const list = feedback.get(fbProduct.id) || [];
+  const c = savedCustomer();
+  document.getElementById('feedbackTitle').textContent = fbProduct.name;
+  fbBody.innerHTML = `
+    <div class="review-list">
+      ${list.length ? list.map((f) => `
+        <div class="review-entry">
+          <p>${escapeHtml(f.text)}</p>
+          <div class="review-by">${escapeHtml(f.name)}${f.createdAt ? ' · ' + formatDate(f.createdAt) : ''}</div>
+        </div>`).join('') : '<p class="muted">No reviews yet for this piece.</p>'}
+    </div>
+    ${thanks ? '<p class="ds-success">Thank you! Your review will appear here once it has been approved.</p>' : `
+    <form class="ds-form review-form" id="feedbackForm" novalidate>
+      <h4>Add a review</h4>
+      <p class="muted small">Your review is shown on the page after it has been approved.</p>
+      <label>Your name<input name="name" required maxlength="60" value="${escapeHtml(c.customerName)}"></label>
+      <label>Your review<textarea name="text" required maxlength="600" rows="3"></textarea></label>
+      <p class="ds-error" id="feedbackError" hidden></p>
+      <button type="submit" class="btn btn-solid btn-block">Submit review</button>
+    </form>`}
+  `;
+}
+
+fbBody.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = e.target;
+  const errorEl = form.querySelector('#feedbackError');
+  const submit = form.querySelector('button[type="submit"]');
+  const name = form.elements.name.value.trim();
+  const text = form.elements.text.value.trim();
+  const showError = (msg) => { errorEl.textContent = msg; errorEl.hidden = false; };
+  if (!name) return showError('Please enter your name.');
+  if (!text) return showError('Please write a few words about the piece.');
+
+  errorEl.hidden = true;
+  submit.disabled = true;
+  submit.textContent = 'Sending…';
+  try {
+    await submitFeedback({ productId: fbProduct.id, productName: fbProduct.name, name, text });
+    renderFeedback(true);
+  } catch (err) {
+    console.error(err);
+    showError('Sorry, your review could not be sent. Please try again.');
+    submit.disabled = false;
+    submit.textContent = 'Submit review';
+  }
 });

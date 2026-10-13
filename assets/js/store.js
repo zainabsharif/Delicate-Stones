@@ -2,7 +2,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js';
 import {
   getFirestore, collection, doc, getDoc, getDocs, addDoc, setDoc,
-  query, orderBy, limit, serverTimestamp,
+  query, orderBy, limit, where, serverTimestamp,
 } from 'https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js';
 import { firebaseConfig, WHATSAPP_NUMBER, CURRENCY } from './firebase-config.js';
 import { SEED_PRODUCTS } from './catalogue-seed.js';
@@ -98,14 +98,28 @@ export function sortProducts(list) {
 
 let productsPromise = null;
 
+// Last successful catalogue, kept in this browser so the page can paint instantly on repeat visits.
+const PRODUCTS_CACHE_KEY = 'dsProductsCache';
+
+export function peekCachedProducts() {
+  if (!db) return null;
+  try {
+    const list = JSON.parse(localStorage.getItem(PRODUCTS_CACHE_KEY) || 'null');
+    return Array.isArray(list) && list.length ? list : null;
+  } catch (e) {
+    return null;
+  }
+}
+
 // Visible products only. Falls back to the built-in catalogue when Firebase isn't set up.
 export function loadProducts() {
   if (!productsPromise) {
     productsPromise = (async () => {
       if (!db) return SEED_PRODUCTS;
       const snap = await getDocs(collection(db, 'products'));
-      const list = snap.docs.map((d) => ({ id: d.id, ...d.data() })).filter((p) => p.visible !== false);
-      return sortProducts(list);
+      const list = sortProducts(snap.docs.map((d) => ({ id: d.id, ...d.data() })).filter((p) => p.visible !== false));
+      try { localStorage.setItem(PRODUCTS_CACHE_KEY, JSON.stringify(list)); } catch (e) {}
+      return list;
     })();
   }
   return productsPromise;
@@ -223,6 +237,29 @@ export function reviewStats(reviews) {
     s.list.push(r);
     byProduct.set(r.productId, s);
   }
+  return byProduct;
+}
+
+// ---------- Feedback (moderated) ----------
+// Saved as unapproved; the public can only read entries the owner has approved.
+export async function submitFeedback({ productId, productName, name, text }) {
+  await addDoc(collection(db, 'feedback'), {
+    productId, productName, name, text, approved: false, createdAt: serverTimestamp(),
+  });
+}
+
+export async function loadApprovedFeedback() {
+  if (!db) return new Map();
+  const snap = await getDocs(query(collection(db, 'feedback'), where('approved', '==', true)));
+  const byProduct = new Map();
+  snap.docs
+    .map((d) => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => (b.createdAt?.seconds ?? 0) - (a.createdAt?.seconds ?? 0))
+    .forEach((f) => {
+      const list = byProduct.get(f.productId) || [];
+      list.push(f);
+      byProduct.set(f.productId, list);
+    });
   return byProduct;
 }
 

@@ -19,6 +19,7 @@ const state = {
   orders: [],
   products: [],
   reviews: [],
+  feedback: [],
   editingId: null,
   formImage: '',
   search: '',
@@ -92,6 +93,10 @@ async function onUser(auth, user) {
       renderProducts();
       renderOrders();
     }, (err) => showListenError('prodList', err)),
+    onSnapshot(query(collection(db, 'feedback'), orderBy('createdAt', 'desc')), (snap) => {
+      state.feedback = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+      renderFeedback();
+    }, (err) => showListenError('fbList', err)),
     onSnapshot(query(collection(db, 'reviews'), orderBy('createdAt', 'desc')), (snap) => {
       state.reviews = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
       renderReviews();
@@ -171,6 +176,7 @@ function renderDashboard() {
     <nav class="tabs" role="tablist">
       <button type="button" data-tab="orders" class="active">Orders <span class="tab-count" id="pendingCount" hidden></span></button>
       <button type="button" data-tab="products">Products</button>
+      <button type="button" data-tab="feedback">Reviews to approve <span class="tab-count" id="fbCount" hidden></span></button>
       <button type="button" data-tab="reviews">Reviews</button>
     </nav>
 
@@ -211,6 +217,10 @@ function renderDashboard() {
       </div>
     </section>
 
+    <section id="tab-feedback" hidden>
+      <div class="rev-list" id="fbList"><p class="empty">Loading feedback…</p></div>
+    </section>
+
     <section id="tab-reviews" hidden>
       <div class="rev-list" id="revList"><p class="empty">Loading reviews…</p></div>
     </section>
@@ -221,7 +231,7 @@ function renderDashboard() {
     if (!b) return;
     state.tab = b.dataset.tab;
     root.querySelectorAll('.tabs button').forEach((x) => x.classList.toggle('active', x === b));
-    ['orders', 'products', 'reviews'].forEach((t) => { document.getElementById('tab-' + t).hidden = t !== state.tab; });
+    ['orders', 'products', 'feedback', 'reviews'].forEach((t) => { document.getElementById('tab-' + t).hidden = t !== state.tab; });
   });
 
   document.getElementById('orderChips').addEventListener('click', (e) => {
@@ -248,6 +258,7 @@ function renderDashboard() {
     renderProducts();
   });
   document.getElementById('revList').addEventListener('click', onReviewAction);
+  document.getElementById('fbList').addEventListener('click', onFeedbackAction);
 }
 
 // ---------- Orders ----------
@@ -711,5 +722,46 @@ async function onReviewAction(e) {
     await deleteDoc(doc(db, 'reviews', b.dataset.deleteReview));
   } catch (err) {
     alert('Could not delete: ' + (err.code || err.message));
+  }
+}
+
+// ---------- Feedback (moderation) ----------
+function renderFeedback() {
+  const list = document.getElementById('fbList');
+  if (!list) return;
+  const waiting = state.feedback.filter((f) => !f.approved).length;
+  const countEl = document.getElementById('fbCount');
+  countEl.textContent = waiting;
+  countEl.hidden = waiting === 0;
+
+  // Waiting for approval first, then approved.
+  const sorted = [...state.feedback.filter((f) => !f.approved), ...state.feedback.filter((f) => f.approved)];
+  list.innerHTML = sorted.length ? sorted.map((f) => `
+    <div class="rev">
+      <div>
+        <span class="badge ${f.approved ? 'b-paid' : 'b-pending'}">${f.approved ? 'Showing on site' : 'Waiting for approval'}</span>
+        <p>${escapeHtml(f.text)}</p>
+        <div class="rev-meta">${escapeHtml(f.name)} · ${escapeHtml(f.productName)} · ${formatDate(f.createdAt)}</div>
+      </div>
+      <div class="prod-btns">
+        <button type="button" class="btn ${f.approved ? 'btn-ghost' : 'btn-solid'}" data-fb-toggle="${escapeHtml(f.id)}">${f.approved ? 'Hide' : 'Approve'}</button>
+        <button type="button" class="btn btn-danger" data-fb-delete="${escapeHtml(f.id)}">Delete</button>
+      </div>
+    </div>`).join('') : '<p class="empty">No feedback yet. Customers can add a review under any piece on the Collections page.</p>';
+}
+
+async function onFeedbackAction(e) {
+  const b = e.target.closest('[data-fb-toggle], [data-fb-delete]');
+  if (!b) return;
+  try {
+    if (b.dataset.fbToggle) {
+      const f = state.feedback.find((x) => x.id === b.dataset.fbToggle);
+      if (f) await updateDoc(doc(db, 'feedback', f.id), { approved: !f.approved });
+    } else if (confirm('Delete this feedback?')) {
+      await deleteDoc(doc(db, 'feedback', b.dataset.fbDelete));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('That change could not be saved: ' + (err.code || err.message));
   }
 }

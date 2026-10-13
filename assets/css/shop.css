@@ -172,3 +172,56 @@ button.btn:disabled{ opacity:0.6; pointer-events:none; }
 }
 .star-input button.on{ color:var(--gold); }
 .star-input button:hover{ transform:scale(1.12); }
+
+.feedback-link{
+  align-self:flex-start; background:none; border:none; padding:0; margin-top:2px;
+  font:inherit; font-size:0.85rem; letter-spacing:0.04em; color:var(--gold-dark);
+  text-decoration:underline; text-underline-offset:3px;
+}
+.feedback-link:hover{ color:var(--gold); }
+.ds-success{ background:#dcebe4; color:#2f5a4a; border-radius:4px; padding:12px 14px; font-size:0.92rem; }
+
+/* ---------- Phones: compact two-column product grid ---------- */
+@media (max-width:560px){
+  html, body{ overflow-x:clip; }
+  .wrap{ padding-left:14px; padding-right:14px; }
+  section{ padding:44px 0; }
+  .grid-4{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px; grid-auto-rows:auto; }
+  .card{ height:auto; }
+  .card:hover{ transform:none; box-shadow:none; }
+  .card-body{ padding:10px 10px 12px; gap:6px; }
+  .card-body .eyebrow{ font-size:0.62rem; letter-spacing:0.08em; gap:6px; }
+  .card-body .eyebrow::before{ width:10px; }
+  .card-body h3{ font-size:1rem; line-height:1.2; }
+  .piece-count{ font-size:0.68rem; margin-top:0; }
+  .card-body p, .card-body p.desc{
+    font-size:0.8rem; line-height:1.4;
+    display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .rating-link{ font-size:0.72rem; }
+  .price{ font-size:1.1rem; }
+  .price.muted{ font-size:0.75rem; }
+  .card-foot{ gap:8px; }
+  .card-actions{ flex-direction:column; align-items:stretch; gap:6px; }
+  .card-actions .btn{ width:100%; justify-content:center; padding:7px 10px; font-size:0.74rem; letter-spacing:0.03em; }
+  .card-body .ask{ font-size:0.72rem; justify-content:center; }
+  .feedback-link{ font-size:0.72rem; }
+  .category-list{ gap:6px; margin-top:16px; margin-bottom:18px; }
+  .category-list button{ padding:8px 12px; font-size:0.82rem; }
+}
+
+/* ---------- Loading: dots moving in a wave ---------- */
+.ds-wave{ grid-column:1 / -1; display:flex; justify-content:center; align-items:center; gap:10px; padding:70px 0; }
+.ds-wave span{
+  width:12px; height:12px; border-radius:50%; background:var(--gold);
+  animation:ds-wave 1.2s ease-in-out infinite;
+}
+.ds-wave span:nth-child(2){ animation-delay:.12s; }
+.ds-wave span:nth-child(3){ animation-delay:.24s; }
+.ds-wave span:nth-child(4){ animation-delay:.36s; }
+.ds-wave span:nth-child(5){ animation-delay:.48s; }
+@keyframes ds-wave{
+  0%, 60%, 100%{ transform:translateY(0); opacity:.45; }
+  30%{ transform:translateY(-16px); opacity:1; }
+}
+@media (prefers-reduced-motion: reduce){ .ds-wave span{ animation-duration:2.4s; } }
