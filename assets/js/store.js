@@ -38,6 +38,12 @@ export function categoryLabel(product) {
   return sub ? `${base} · ${sub}` : base;
 }
 
+// Number of pieces in a grouped listing (null when unknown or not grouped).
+export function pieceCount(product) {
+  const n = Number(product.pieces);
+  return product.subcategory === 'grouped' && Number.isInteger(n) && n > 0 ? n : null;
+}
+
 // ---------- Helpers ----------
 export function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, (c) => (
