@@ -17,7 +17,9 @@
 <script src="./assets/page-transition.js?v=3"></script>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
-<script type="module" src="./assets/js/collections.js?v=5"></script>
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js">
+<link rel="modulepreload" href="https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js">
+<script type="module" src="./assets/js/collections.js?v=6"></script>
 <style>
   :root{
     --ink:#17140f;
@@ -188,7 +190,7 @@ nav.wrap{
   .wa-float:hover{ transform:scale(1.08); filter:brightness(0.85);}
 
 </style>
-<link rel="stylesheet" href="./assets/css/shop.css?v=5">
+<link rel="stylesheet" href="./assets/css/shop.css?v=6">
 <script src="./assets/elegant.js?v=3" defer></script>
 </head>
 <body>

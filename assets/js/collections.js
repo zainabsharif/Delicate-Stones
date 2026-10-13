@@ -47,14 +47,25 @@ async function init() {
     }
     return;
   }
-  renderGrid();
+  // Skip the rebuild when the fresh catalogue matches what is already on screen.
+  if (!cached || JSON.stringify(cached) !== JSON.stringify(products)) renderGrid();
   if (!cached) setupFilter();
 
   if (social) {
     [stats, feedback] = await social;
     socialLoaded = true;
-    renderGrid();
+    fillSocial();
   }
+}
+
+// Add ratings and review buttons to the cards already on screen, without rebuilding them.
+function fillSocial() {
+  grid.querySelectorAll('.card[data-id]').forEach((card) => {
+    const p = products.find((x) => x.id === card.dataset.id);
+    if (!p) return;
+    card.querySelector('[data-slot="rating"]').innerHTML = ratingHtml(p);
+    card.querySelector('[data-slot="feedback"]').innerHTML = feedbackHtml(p);
+  });
 }
 
 function ratingHtml(p) {
@@ -70,7 +81,7 @@ function ratingHtml(p) {
 function feedbackHtml(p) {
   if (!isConfigured || !socialLoaded) return '';
   const n = (feedback.get(p.id) || []).length;
-  return `<button type="button" class="feedback-link" data-feedback="${escapeHtml(p.id)}">${n ? `Customer reviews (${n})` : 'Add review'}</button>`;
+  return `<button type="button" class="btn btn-ghost btn-sm feedback-link" data-feedback="${escapeHtml(p.id)}">${n ? `Customer reviews (${n})` : 'Add review'}</button>`;
 }
 
 function cardHtml(p) {
@@ -82,13 +93,13 @@ function cardHtml(p) {
     ? `<div class="price">${formatPrice(p.price)}</div>`
     : (isConfigured ? '<div class="price muted">Price on request</div>' : '');
   return `
-    <div class="card" data-category="${escapeHtml(p.category)}" data-sub="${escapeHtml(p.subcategory || '')}">
+    <div class="card" data-id="${escapeHtml(p.id)}" data-category="${escapeHtml(p.category)}" data-sub="${escapeHtml(p.subcategory || '')}">
       <div class="card-art"><img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async"></div>
       <div class="card-body">
         <div class="eyebrow">${escapeHtml(categoryLabel(p))}</div>
         <h3>${escapeHtml(p.name)}</h3>
         ${pieceCount(p) ? `<div class="piece-count">${pieceCount(p)} pieces</div>` : ''}
-        ${ratingHtml(p)}
+<span data-slot="rating">${ratingHtml(p)}</span>
         <p class="desc">${escapeHtml(p.description)}</p>
         <div class="card-foot">
           ${price}
@@ -97,7 +108,7 @@ function cardHtml(p) {
             <a class="ask" href="${escapeHtml(ask)}" target="_blank" rel="noopener">Ask about this piece</a>
           </div>
         </div>
-        ${feedbackHtml(p)}
+<span data-slot="feedback" class="feedback-slot">${feedbackHtml(p)}</span>
       </div>
     </div>`;
 }
