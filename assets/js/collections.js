@@ -14,9 +14,6 @@ let feedback = new Map();
 let currentCategory = 'all';
 let currentSub = 'all';
 
-initCart();
-init();
-
 let socialLoaded = false;
 
 async function init() {
@@ -390,3 +387,7 @@ fbBody.addEventListener('submit', async (e) => {
     submit.textContent = 'Submit review';
   }
 });
+
+// Start last, once every module-level variable above has been defined.
+initCart();
+init();
