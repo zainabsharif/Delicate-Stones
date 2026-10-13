@@ -1,10 +1,6 @@
 // ---- Collections page: product grid, category filter, reviews ----
 import {
-<<<<<<< HEAD
-  isConfigured, SUBCATEGORIES, categoryLabel, loadProducts, peekCachedProducts, loadAllReviews, reviewStats, hasPrice,
-=======
-  isConfigured, SUBCATEGORIES, categoryLabel, pieceCount, loadProducts, loadAllReviews, reviewStats, hasPrice,
->>>>>>> 6da3b3b94e751b229bbb5d32d0892720ddd4226e
+  isConfigured, SUBCATEGORIES, categoryLabel, pieceCount, loadProducts, peekCachedProducts, loadAllReviews, reviewStats, hasPrice,
   formatPrice, escapeHtml, stars, waLink, formatDate, normalizePhone, isValidPhone,
   checkReviewEligibility, submitReview, submitFeedback, loadApprovedFeedback,
 } from './store.js';
