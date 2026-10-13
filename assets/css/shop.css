@@ -174,7 +174,11 @@ button.btn:disabled{ opacity:0.6; pointer-events:none; }
 .star-input button:hover{ transform:scale(1.12); }
 
 [data-slot]{ display:contents; }
-.feedback-link{ align-self:flex-start; margin-top:2px; }
+.feedback-link{
+  align-self:flex-start; margin-top:6px; text-decoration:none;
+  background:transparent; color:var(--ink); border:1px solid var(--ink); border-radius:999px;
+}
+.feedback-link:hover{ background:var(--ink); color:var(--ivory); }
 .ds-success{ background:#dcebe4; color:#2f5a4a; border-radius:4px; padding:12px 14px; font-size:0.92rem; }
 
 /* ---------- Phones: compact two-column product grid ---------- */
